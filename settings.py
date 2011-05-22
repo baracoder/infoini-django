@@ -1,4 +1,6 @@
 # Django settings for infoini project.
+import os.path
+PWD = os.path.dirname(os.path.realpath(__file__ ))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -45,17 +47,17 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(PWD, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/admin/media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'smt)po*gi1d6ivtny-ac_nd_r&kr4niu$4sq+6=v4xw9cv@%uf'
