@@ -73,6 +73,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'infoini.urls'
@@ -97,4 +98,5 @@ INSTALLED_APPS = (
     'news',
     'tuer',
     'django.contrib.markup',
+    'django.contrib.flatpages',
 )
