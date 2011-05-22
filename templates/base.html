@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>{% block title %}infoINI{% endblock %}</title>
+        <style>
+/* wird in eine css datei ausgegliedert */
+* {padding:0; margin:0;font-family:Arial;}
+.clear {clear:both;}
+
+body {background-color:#eee;}
+#frame {width:43em;border:1px solid #ccc;margin:auto auto;background-color:#fff;}
+#top {background-color:#000; color:#CCC;}
+#top .content {padding:1em;}
+#top #logo {float:left;width:10em;margin-right:2em;}
+#top h1 {font-size:2.0em;float:left;width:9em;}
+#top h2 {font-size:0.7em;float:left;width:23em;}
+#top #login_box {border:#888 solid 1px;width:10em;float:right;}
+#top #tuer {float:right;}
+#top #tuer .offen {background-color:green;}
+#top #tuer .geschlossen {background-color:red;}
+#top #tuer .keinstatus {background-color:#990;}
+#top #top_links {clear:both;background-color:#888;color:#FFF;padding:0.2em;}
+#top #top_links a {padding:0.3em;color:#037;text-decoration:none;}
+#top #top_links a:hover {text-decoration:underline;}
+#main {}
+#main .content {margin:0.5em;color:#444;}
+#main .content h2 {}
+
+
+
+        </style>
+    </head>
+    <body>
+
+        <div id="frame">
+            <div id="top">
+                <div class="content">
+                    <div id="login_box">
+                        Hier login eingabefelder und
+                        link zum anmeldeformular, sowie passwort
+                        zurücksetzen
+                    </div>
+                    <img src="" id="logo" border="0"/>
+                    <h1>www.infoini.de</h1>
+                    <h2>Webseite des FSR6: Fachschaft des Fachbereichs VI
+                    der Beuth Hochschule fuer Technik Berlin</h2>
+                    <div class="clear"></div>
+                </div>
+                <div id="top_links">
+                    {% block links %}
+                    <a href="/news">News</a>
+                    <a href="/lernhilfen">Lernhilfen</a>
+                    <a href="/page/Personen">Personen</a>
+                    <a href="/page/Kontakt">Kontakt</a>
+                    <a href="/page/Impressum">Impressum</a>
+                    {% endblock %}
+                    <div id="tuer">Tür: {% block links %}<span class="keinstatus">KEIN STATUS</span>{% endblock %}</div>
+                </div>
+            </div>
+            <div id="main">
+                <div class="content">
+                    {% block content %}
+                        Kein Inhalt
+                    {% endblock %}
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </body>
+</html>
