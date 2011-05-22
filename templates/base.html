@@ -54,7 +54,15 @@ body {background-color:#eee;}
                     <a href="/page/Kontakt">Kontakt</a>
                     <a href="/page/Impressum">Impressum</a>
                     {% endblock %}
-                    <div id="tuer">Tür: {% block tuer %}<span class="keinstatus">KEIN STATUS</span>{% endblock %}</div>
+                    <div id="tuer">Tür:
+                        {% block tuer %}
+                        {% if ist_offen %}
+                            <span class="offen">offen</span>
+                        {% else %}
+                            <span class="geschlossen">geschlossen</span>
+                        {% endif %}
+                        {% endblock %}
+                    </div>
                 </div>
             </div>
             <div id="main">
