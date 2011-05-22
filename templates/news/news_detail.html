@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load markup %}
+
+{% block content %}
+<div class="entry">
+    <h2>{{ object.title }}</h2>
+    <div class="meta">erstellt am {{ object.pub_date|date:"D, d.m.Y" }}</div>
+    {{ object.text|textile }}
+</div>
+{% endblock %}

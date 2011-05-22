@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load markup %}
+
+{% block content %}
+{% for new in object_list %}
+<div class="entry">
+    <h2>{{ new.title }}</h2>
+    <div class="meta">erstellt am {{ new.pub_date|date:"D, d.m.Y" }}</div>
+    {{ new.text|textile|truncatewords_html:100 }}
+    <a href="/news/{{ new.id }}-{{ new.title|slugify }}">mehr...</a>
+</div>
+{% endfor %}
+{% endblock %}
