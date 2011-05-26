@@ -1,4 +1,7 @@
+import serial
+
+s = serial.Serial( port="/dev/ttyS0")
 
 def ist_offen():
-    #TODO
-    return False
+    s.setRTS()
+    return s.getCTS()
