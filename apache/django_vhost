@@ -19,6 +19,8 @@
     # Statische Dateien
     Alias /media/ /local/infoini_dg/infoini/media/
     <Directory /local/infoini_dg/infoini/media>
+        ExpiresActive on
+        ExpiresDefault "access 2 days"
         Order deny,allow
         Allow from all
     </Directory>
