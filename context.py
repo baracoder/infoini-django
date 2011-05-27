@@ -1,4 +1,4 @@
 from tuer import ist_offen
 
 def glob(request):
-    return {'ist_offen':ist_offen}
+    return {'ist_offen':ist_offen()}
