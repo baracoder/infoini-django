@@ -1,8 +1,7 @@
 import os
 import sys
-path = '/local/infoini_dg'
-if path not in sys.path:
-    sys.path.append(path)
+sys.path.append('/local/infoini_dg')
+sys.path.append('/local/infoini_dg/infoini')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'infoini.settings'
 
