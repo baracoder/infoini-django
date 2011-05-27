@@ -1,5 +1,7 @@
-* {padding:0; margin:0;font-family:Arial;}
+* {padding:0; font-family:Arial;}
 .clear {clear:both;}
+a {color:#028999;text-decoration:none;}
+a:hover {border-bottom:1px dotted #028999;}
 
 body {background-color:#eee;}
 #frame {width:43em;border:1px solid #ccc;margin:auto auto;background-color:#fff;}
@@ -13,10 +15,20 @@ body {background-color:#eee;}
 #top #tuer .offen {background-color:green;}
 #top #tuer .geschlossen {background-color:red;}
 #top #tuer .keinstatus {background-color:#990;}
-#top #top_links {clear:both;background-color:#888;color:#FFF;padding:0.2em;}
-#top #top_links a {padding:0.3em;color:#037;text-decoration:none;}
-#top #top_links a:hover {text-decoration:underline;}
-#main {}
-#main .content {margin:0.5em;color:#444;}
-#main .content h2 {}
+#top #top_links {clear:both;background-color:#aaa;color:#FFF;padding:0.2em;}
+#top #top_links a {padding:0.3em;color:#028999;text-decoration:none;}
+#top #top_links a:hover {background-color:#CCC;}
+#main {
+    -moz-box-shadow:    inset 0px 1px 5px #333;
+    -webkit-box-shadow: inset 0px 1px 5px #333;
+    box-shadow:         inset 0px 1px 5px #333;
+    min-height:20em;
+
+
+}
+#main .content {padding:1em;color:#444;}
+#main .content h2 {margin:0;}
+#main .content .meta {font-size:0.7em;text-align:right;border-top:1px dotted #CCC;}
+#main .content p {font-size:0.9em;line-height:1.2em;margin:0;}
+
 
