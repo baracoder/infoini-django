@@ -1,6 +1,6 @@
 import os
 import sys
-path = '/local/infoini_dg/infoini'
+path = '/local/infoini_dg'
 if path not in sys.path:
     sys.path.append(path)
 
