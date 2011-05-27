@@ -7,8 +7,8 @@ body {background-color:#eee;}
 #frame {width:43em;border:1px solid #ccc;margin:auto auto;background-color:#fff;}
 #top {background-color:#000; color:#CCC;}
 #top .content {padding:1em;} 
-#top #logo {float:left;width:10em;margin-right:2em;}
-#top h1 {font-size:2.0em;float:left;width:9em;}
+#top #logo {float:left;width:5.8em;margin-right:2em;}
+#top h1 {font-size:2.0em;float:left;width:10em;margin:0;}
 #top h2 {font-size:0.7em;float:left;width:23em;}
 #top #login_box {border:#888 solid 1px;width:10em;float:right;}
 #top #tuer {float:right;}
