@@ -1,13 +1,9 @@
 from django.conf.urls.defaults import *
 
 from news.models import News
-from tuer import ist_offen
 from django.views.generic.list_detail import object_list, object_detail
 
-info_dict = {
-    'queryset': News.objects.all(),
-    'extra_context': {'ist_offen':ist_offen}
-}
+info_dict = { 'queryset': News.objects.all() }
 list_dict = info_dict.copy()
 list_dict['paginate_by']=5
 
