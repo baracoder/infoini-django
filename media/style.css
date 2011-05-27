@@ -30,5 +30,6 @@ body {background-color:#eee;}
 #main .content h2 {margin:0;}
 #main .content .meta {font-size:0.7em;text-align:right;border-top:1px dotted #CCC;}
 #main .content p {font-size:0.9em;line-height:1.2em;margin:0;}
+#main .content ul {padding-left:1em;}
 
 
