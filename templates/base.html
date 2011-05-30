@@ -15,6 +15,9 @@
 {% if user.is_authenticated %}
 Hallo {{ user.username }}!
 <a href="/user/logout/">Ausloggen</a>?
+{% if user.is_staff %}
+Du hast Zugriff zum <a href="/admin/">Admin-Interface</a>
+{% endif %}
 {% else %}
 <form method="post" action="/user/login/">
 {% csrf_token %}
