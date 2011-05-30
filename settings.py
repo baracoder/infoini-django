@@ -62,6 +62,9 @@ ADMIN_MEDIA_PREFIX = '/admin/media/'
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'smt)po*gi1d6ivtny-ac_nd_r&kr4niu$4sq+6=v4xw9cv@%uf'
 
+LOGIN_REDIRECT_URL='/'
+
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -91,6 +94,7 @@ TEMPLATE_DIRS = (
 TEMPLATE_CONTEXT_PROCESSORS = ("django.core.context_processors.auth",
 "django.core.context_processors.debug",
 "django.core.context_processors.i18n",
+'django.core.context_processors.request',
 "infoini.context.glob",)
 
 AUTHENTICATION_BACKENDS = (
