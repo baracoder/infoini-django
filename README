@@ -2,4 +2,5 @@ System requirements
 --------------------
 * django >= 1.2
 * python-textile
+* python-pam
 
