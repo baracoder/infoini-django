@@ -93,6 +93,11 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.core.context_processors.auth",
 "django.core.context_processors.i18n",
 "infoini.context.glob",)
 
+AUTHENTICATION_BACKENDS = (
+'django.contrib.auth.backends.ModelBackend',
+'djpam.backends.PAMBackend',
+)
+
 
 INSTALLED_APPS = (
     'django.contrib.auth',
