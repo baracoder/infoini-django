@@ -54,6 +54,8 @@ MEDIA_ROOT = os.path.join(PWD, 'media')
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/media'
 
+LERNHILFEN_ROOT = os.path.join(PWD,'var/lernhilfen')
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -115,6 +117,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'news',
     'tuer',
+    'lernhilfen',
     'django.contrib.markup',
     'django.contrib.flatpages',
 )
