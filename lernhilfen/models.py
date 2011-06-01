@@ -45,14 +45,14 @@ class Lernhilfe(models.Model):
             old_path = old.get_full_path()
             new_path = self.get_full_path()
             if old_path != new_path:
-                self.file_move(old_path,new_path)
+                self._file_move(old_path,new_path)
 
         if not os.path.exits(self.get_full_path()): raise ValidationError('Datei nicht vorhanden')
         super(Lernhilfe, self).save()
 
 
     def delete(self, *args, **kwargs):
-        self.file_delete()
+        self._file_delete()
         super(Lernhilfe, self).delete()
 
 
@@ -62,7 +62,7 @@ class Lernhilfe(models.Model):
         if not os.path.exits(d):
             os.makedirs(d)
 
-    def file_move(self, old, new):
+    def _file_move(self, old, new):
         self._create_folder_if_not_exists()
         if os.path.exits(self.get_full_path()): raise ValidationError('Datei bereits vorhanden')
         os.rename(old,new)
@@ -71,11 +71,16 @@ class Lernhilfe(models.Model):
     def file_save(self, f):
         self._create_folder_if_not_exists()
         p = self.get_full_path()
-        # TODO
-        # datei f speichern
+
+        # datei speichern
+        destination = open(p, 'wb+')
+        for chunk in f.chunks():
+            destination.write(chunk)
+        destination.close()
 
 
-    def file_delete(self):
+
+    def _file_delete(self):
         p = self.get_full_path()
         os.remove(p)
 
