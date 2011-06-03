@@ -48,7 +48,7 @@ class Studiengang(models.Model):
 # hilfsmethode
 def get_path(self,fname=None):
     if fname:
-        self.endung = os.path.splitext(fname)[1]
+        self.endung = os.path.splitext(fname)[1].lower()
     return os.path.join(
         'lernhilfen',
         self.fachrichtung.get_path(),
@@ -81,7 +81,7 @@ class Lernhilfe(models.Model):
     def save(self, *args, **kwargs):
         # wenn datei bereits in db und pfad unterschiedlich: verschieben
         if self.id:
-            old_path = self.datei
+            old_path = self.datei.name
             new_path = self.get_path()
             if old_path != new_path:
                 self._file_move(
@@ -91,25 +91,29 @@ class Lernhilfe(models.Model):
         super(Lernhilfe, self).save()
 
 
-    #def delete(self, *args, **kwargs):
-    #    self._file_delete()
-    #    super(Lernhilfe, self).delete()
+    def delete(self, *args, **kwargs):
+        self._file_delete()
+        super(Lernhilfe, self).delete()
 
 
     def _create_folder_if_not_exists(self):
         d = os.path.dirname(self.get_path())
-        if not os.path.exits(d):
+        if not os.path.exists(d):
             os.makedirs(d)
 
     def _file_move(self, old, new):
         self._create_folder_if_not_exists()
-        if os.path.exits(new): raise ValidationError('Datei bereits vorhanden')
+        if os.path.exists(new): raise ValidationError('Datei bereits vorhanden')
         os.rename(old,new)
 
 
-    #def _file_delete(self):
-    #    p = self.get_path()
-    #    os.remove(p)
+    def _file_delete(self):
+        p = os.path.join(settings.MEDIA_ROOT, self.get_path())
+        try:
+            os.remove(p)
+            return True
+        except os.error:
+            return False
 
 admin.site.register(Typ)
 admin.site.register(Fach)
