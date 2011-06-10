@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     'news',
     'tuer',
     'lernhilfen',
+    'django_filters',
     'django.contrib.markup',
     'django.contrib.flatpages',
 )
