@@ -80,7 +80,7 @@ class Lernhilfe(models.Model):
     studiengang = models.ForeignKey('Studiengang')
     semester = models.ForeignKey('Semester')
     gesichtet = models.BooleanField(default=False)
-    md5sum = models.CharField(editable=False,max_length=36)
+    md5sum = models.CharField(unique=True,editable=False,max_length=36)
     pfad = models.CharField(editable=False,max_length=500)
 
     # methode
