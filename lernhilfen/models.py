@@ -93,11 +93,11 @@ class Lernhilfe(models.Model):
         return slugify(self.name)
 
     def getmd5(self):
-        f = self.datei.open()
+        self.datei.open()
         md5 = hashlib.md5()
-        for chunk in iter(lambda: f.read(128*md5.block_size), ''):
+        for chunk in iter(lambda: self.datei.read(128*md5.block_size), ''):
             md5.update(chunk)
-        return md5.digset()
+        return md5.hexdigest()
 
     def move_if_path_changed(self,save=True):
         old_path = self.datei.name
