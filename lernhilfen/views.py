@@ -1,13 +1,12 @@
 # coding=utf-8
 from django.shortcuts import render_to_response
-from infoini.lernhilfen import  forms
+from infoini.lernhilfen import models, forms
 
 
 def index(request):
     # übersicht mit filteroptionen anzeigen
-    filterset = LernhilfenFilterSet(request.GET or None)
-    return
-    render_to_response('lernhilfen/index.html', {
+    filterset = forms.LernhilfenFilterSet(request.GET or None)
+    return render_to_response('lernhilfen/index.html', {
         'filterset':filterset
         })
 
