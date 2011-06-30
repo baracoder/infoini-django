@@ -2,57 +2,68 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.conf import settings
-from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.core.files.storage import FileSystemStorage
 
 import os
 import mimetypes
 mimetypes.init()
+import hashlib
 
-
-class Typ(models.Model):
+class AbstractHasPath(models.Model):
     class Meta:
-        verbose_name="Typ"
-        verbose_name_plural="Typen"
-    name = models.CharField(max_length=100)
+        abstract=True
     def __unicode__(self):
         return self.name
-
     def get_path(self):
-        return slugify(self.name)
+        return slugify(self.__unicode__())
 
-class Fach(models.Model):
+    def _move_all(self):
+        """Alle im Bezug stehenden Lernhifen verschieben
+
+        django erstellt automatisch einen backward
+        link zum related object
+        """
+        for l in self.lernhilfe_set.all():
+            l.move_if_path_changed()
+
+
+    def save(self, *args, **kwargs):
+        super(AbstractHasPath, self).save()
+        # wenn objekt bereits vorhanden
+        if self.id:
+            self._move_all()
+
+class Art(AbstractHasPath):
     class Meta:
-        verbose_name="Fach"
-        verbose_name_plural="Fächer"
+        verbose_name="Art"
+        verbose_name_plural="Arten"
     name = models.CharField(max_length=100)
-    kurzname = models.CharField(max_length=10)
 
-    def __unicode__(self):
-        return self.kurzname + ' (' + self.name + ')'
+class Modul(AbstractHasPath):
+    class Meta:
+        verbose_name="Modul"
+        verbose_name_plural="Module"
+    name = models.CharField(max_length=100)
 
-    def get_path(self):
-        return slugify(self.kurzname)
 
-class Studiengang(models.Model):
+class Studiengang(AbstractHasPath):
     class Meta:
         verbose_name="Studiengang"
         verbose_name_plural="Studiengänge"
     name = models.CharField(max_length=100)
-    def __unicode__(self):
-        return self.name
-    def get_path(self):
-        return slugify(self.name)
 
 # hilfsmethode
-def get_path(self,fname=None):
+def get_full_path(self,fname=None):
     if fname:
         self.endung = os.path.splitext(fname)[1].lower()
     return os.path.join(
         'lernhilfen',
-        self.fachrichtung.get_path(),
-        self.fach.get_path(),
+        self.studiengang.get_path(),
+        self.modul.get_path(),
+        self.dozent.get_path(),
+        self.semester.get_path(),
+        self.art.get_path(),
         self.get_filename() + self.endung)
 
 
@@ -61,43 +72,68 @@ class Lernhilfe(models.Model):
         verbose_name="Lernhilfe"
         verbose_name_plural="Lernhilfen"
     name = models.CharField(max_length=100)
-    datei = models.FileField('Datei',upload_to=get_path)
+    datei = models.FileField('Datei',upload_to=get_full_path)
     endung = models.CharField(max_length=40,editable=False)
-    typ = models.ForeignKey('Typ')
-    fach = models.ForeignKey('Fach')
-    fachrichtung = models.ForeignKey('Studiengang')
+    art = models.ForeignKey('Art')
+    modul = models.ForeignKey('Modul')
+    dozent = models.ForeignKey('Dozent')
+    studiengang = models.ForeignKey('Studiengang')
+    semester = models.ForeignKey('Semester')
     gesichtet = models.BooleanField(default=False)
+    md5sum = models.CharField(editable=False,max_length=36)
+    pfad = models.CharField(editable=False,max_length=500)
 
     # methode
-    get_path=get_path
+    get_full_path=get_full_path
+    def get_full_abs_path(self):
+        return os.path.join(settings.MEDIA_ROOT,self.get_full_path())
 
-    def __unicode__(self):
-        return self.name
 
     def get_filename(self):
         return slugify(self.name)
 
+    def getmd5(self):
+        f = self.datei.open()
+        md5 = hashlib.md5()
+        for chunk in iter(lambda: f.read(128*md5.block_size), ''):
+            md5.update(chunk)
+        return md5.digset()
+
+    def move_if_path_changed(self,save=True):
+        old_path = self.datei.name
+        new_path = self.get_full_path()
+        if old_path != new_path:
+            self._file_move(
+                os.path.join(settings.MEDIA_ROOT,old_path),
+                os.path.join(settings.MEDIA_ROOT,new_path))
+            self.datei.name=new_path
+            self.pfad=new_path
+            if save: self.save()
+
 
     def save(self, *args, **kwargs):
-        # wenn datei bereits in db und pfad unterschiedlich: verschieben
+        # wenn datei bereits in db und 
+        # pfad unterschiedlich: verschieben
         if self.id:
-            old_path = self.datei.name
-            new_path = self.get_path()
-            if old_path != new_path:
-                self._file_move(
-                    os.path.join(settings.MEDIA_ROOT,old_path),
-                    os.path.join(settings.MEDIA_ROOT,new_path))
-                self.datei.name=new_path
-        super(Lernhilfe, self).save()
+            self.move_if_path_changed(save=False)
+            super(Lernhilfe, self).save()
+        else:
+            #TODO gibt es eine bessere lösung?
+            super(Lernhilfe, self).save()
+            self.md5sum=self.getmd5()
+            super(Lernhilfe, self).save()
 
 
     def delete(self, *args, **kwargs):
-        self._file_delete()
+        try:
+            os.remove(self.datei.path)
+        except os.error:
+            pass
         super(Lernhilfe, self).delete()
 
 
     def _create_folder_if_not_exists(self):
-        d = os.path.dirname(self.get_path())
+        d = os.path.dirname(self.get_full_abs_path())
         if not os.path.exists(d):
             os.makedirs(d)
 
@@ -106,16 +142,32 @@ class Lernhilfe(models.Model):
         if os.path.exists(new): raise ValidationError('Datei bereits vorhanden')
         os.rename(old,new)
 
+    def __unicode__(self):
+        return self.name
 
-    def _file_delete(self):
-        p = os.path.join(settings.MEDIA_ROOT, self.get_path())
-        try:
-            os.remove(p)
-            return True
-        except os.error:
-            return False
 
-admin.site.register(Typ)
-admin.site.register(Fach)
-admin.site.register(Studiengang)
-admin.site.register(Lernhilfe)
+class Dozent(AbstractHasPath):
+    class Meta:
+        verbose_name="Dozent"
+        verbose_name_plural="Dozenten"
+    nachname = models.CharField('Nachname',max_length=200)
+    vorname  = models.CharField('Vorname',max_length=200)
+
+    def __unicode__(self):
+        return self.nachname+ ', ' +self.vorname
+
+
+class Semester(AbstractHasPath):
+    class Meta:
+        verbose_name="Semester"
+        verbose_name_plural="Semester"
+    HAELFTE_CHOISES=(
+        ('ss','SS'),
+        ('ws','WS')
+    )
+    jahr = models.IntegerField('Jahr')
+    haelfte = models.CharField('Hälfte',max_length=2,choices=HAELFTE_CHOISES)
+    def __unicode__(self):
+        return str(self.jahr)+ '-' +self.haelfte
+
+
