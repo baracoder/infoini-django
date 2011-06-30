@@ -7,7 +7,7 @@ def index(request):
     # übersicht mit filteroptionen anzeigen
     filterset = forms.LernhilfenFilterSet(request.GET or None)
     return render_to_response('lernhilfen/index.html', {
-        'filterset':filterset
+        'filter':filterset
         })
 
 def upload(request):
