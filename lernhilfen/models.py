@@ -168,6 +168,6 @@ class Semester(AbstractHasPath):
     jahr = models.IntegerField('Jahr')
     haelfte = models.CharField('Hälfte',max_length=2,choices=HAELFTE_CHOISES)
     def __unicode__(self):
-        return str(self.jahr)+ '-' +self.haelfte
+        return unicode(self.jahr) +'-'+ self.get_haelfte_display()
 
 
