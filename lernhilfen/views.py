@@ -1,6 +1,9 @@
 # coding=utf-8
 from django.shortcuts import render_to_response
 from infoini.lernhilfen import models, forms
+from django.views.decorators.csrf import csrf_protect
+from django.core.context_processors import csrf
+
 
 
 def index(request):
@@ -10,9 +13,18 @@ def index(request):
         'filter':filterset
         })
 
+@csrf_protect
 def upload(request):
-    # todo
-    return False
+    uploadform = forms.LernhilfenUpload(request.POST or None, request.FILES or None)
+    if request.POST and uploadform.is_valid():
+        uploadform.save()
+
+
+    c = {
+        'uploadform':uploadform
+    }
+    c.update(csrf(request))
+    return render_to_response('lernhilfen/upload.html', c)
 
 def sichten(request):
     # muss in gruppe FSR oder Helper sein

@@ -1,6 +1,36 @@
-{{ filter.form }}
+{% extends "base.html" %}
 
+
+{% block content %}
+
+<a href="/lernhilfen/upload/">Lernhilfen hochladen</a>
+
+<form action="." method="GET">
+    {{ filter.form}}
+    <input type="submit" value="suchen"/>
+</form>
+
+<table width="100%" border="1">
+    <tr>
+        <th>Studiengang</th>
+        <th>Modul</th>
+        <th>Dozent</th>
+        <th>Semester</th>
+        <th>Art</th>
+        <th>Name</th>
+        <th>Typ</th>
+    </tr>
 {% for obj in filter.qs %}
-    {{ obj }}
+    <tr>
+        <td>{{ obj.studiengang }}</td>
+        <td>{{ obj.modul }}</td>
+        <td>{{ obj.dozent }}</td>
+        <td>{{ obj.semester }}</td>
+        <td>{{ obj.art }}</td>
+        <td><a href="{{ obj.datei.url }}" target="_blank">{{ obj.name }}</a></td>
+        <td>{{ obj.endung }}</td>
+    </tr>
 {% endfor %}
+</table>
 
+{% endblock %}
