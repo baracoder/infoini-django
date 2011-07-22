@@ -128,8 +128,6 @@ class Lernhilfe(models.Model):
 
     def _file_move(self, old, new):
         self._create_folder_if_not_exists()
-        print old
-        print new
         if os.path.exists(new): raise ValidationError('Datei bereits vorhanden')
         os.rename(old,new)
 
