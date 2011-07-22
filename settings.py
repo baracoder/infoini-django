@@ -63,6 +63,7 @@ ADMIN_MEDIA_PREFIX = '/admin/media/'
 SECRET_KEY = 'smt)po*gi1d6ivtny-ac_nd_r&kr4niu$4sq+6=v4xw9cv@%uf'
 
 LOGIN_REDIRECT_URL='/'
+LOGIN_URL='/user/login/'
 
 
 # List of callables that know how to import templates from various sources.
