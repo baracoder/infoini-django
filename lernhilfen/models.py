@@ -80,7 +80,6 @@ class Lernhilfe(models.Model):
     studiengang = models.ForeignKey('Studiengang')
     semester = models.ForeignKey('Semester')
     gesichtet = models.BooleanField(default=False)
-    md5sum = models.CharField(unique=True,editable=False,max_length=36)
     pfad = models.CharField(editable=False,max_length=500)
 
     # methode
@@ -91,13 +90,6 @@ class Lernhilfe(models.Model):
 
     def get_filename(self):
         return slugify(self.name)
-
-    def getmd5(self):
-        self.datei.open()
-        md5 = hashlib.md5()
-        for chunk in iter(lambda: self.datei.read(128*md5.block_size), ''):
-            md5.update(chunk)
-        return md5.hexdigest()
 
     def move_if_path_changed(self,save=True):
         old_path = self.datei.name
@@ -118,9 +110,6 @@ class Lernhilfe(models.Model):
             self.move_if_path_changed(save=False)
             super(Lernhilfe, self).save()
         else:
-            #TODO gibt es eine bessere lösung?
-            super(Lernhilfe, self).save()
-            self.md5sum=self.getmd5()
             super(Lernhilfe, self).save()
 
 
@@ -139,6 +128,8 @@ class Lernhilfe(models.Model):
 
     def _file_move(self, old, new):
         self._create_folder_if_not_exists()
+        print old
+        print new
         if os.path.exists(new): raise ValidationError('Datei bereits vorhanden')
         os.rename(old,new)
 
