@@ -8,7 +8,6 @@ from django.core.files.storage import FileSystemStorage
 import os
 import mimetypes
 mimetypes.init()
-import hashlib
 
 class AbstractHasPath(models.Model):
     class Meta:
@@ -81,6 +80,7 @@ class Lernhilfe(models.Model):
     semester = models.ForeignKey('Semester')
     gesichtet = models.BooleanField(default=False)
     pfad = models.CharField(editable=False,max_length=500)
+    datum = models.DateTimeField(editable=False,auto_now_add=True)
 
     # methode
     get_full_path=get_full_path
@@ -89,7 +89,7 @@ class Lernhilfe(models.Model):
 
 
     def get_filename(self):
-        return slugify(self.name)
+        return slugify(self.name) + '-'+ slugify(self.datum)
 
     def move_if_path_changed(self,save=True):
         old_path = self.datei.name
