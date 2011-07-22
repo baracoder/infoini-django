@@ -7,6 +7,7 @@ from django.core.files.storage import FileSystemStorage
 
 import os
 import mimetypes
+import datetime
 mimetypes.init()
 
 class AbstractHasPath(models.Model):
@@ -80,7 +81,7 @@ class Lernhilfe(models.Model):
     semester = models.ForeignKey('Semester')
     gesichtet = models.BooleanField(default=False)
     pfad = models.CharField(editable=False,max_length=500)
-    datum = models.DateTimeField(editable=False,auto_now_add=True)
+    datum = models.DateTimeField(editable=False,default=datetime.datetime.now)
 
     # methode
     get_full_path=get_full_path
