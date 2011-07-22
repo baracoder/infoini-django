@@ -11,4 +11,6 @@ def index(request):
 
     return render_to_response('tuer/index.html',{'status':status})
 
+def status(request):
+    return render_to_response('status.xml',{'status':ist_offen()}, mimetype='text/xml; charset=utf-8')
 
