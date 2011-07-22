@@ -53,7 +53,7 @@ MEDIA_ROOT = os.path.join(PWD, 'media')
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/media'
+MEDIA_URL = '/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -64,6 +64,7 @@ ADMIN_MEDIA_PREFIX = '/admin/media/'
 SECRET_KEY = 'smt)po*gi1d6ivtny-ac_nd_r&kr4niu$4sq+6=v4xw9cv@%uf'
 
 LOGIN_REDIRECT_URL='/'
+LOGIN_URL='/user/login/'
 
 
 # List of callables that know how to import templates from various sources.
@@ -116,6 +117,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'news',
     'tuer',
+    'lernhilfen',
+    'django_filters',
     'django.contrib.markup',
     'django.contrib.flatpages',
 )

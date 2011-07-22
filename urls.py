@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     (r'^news/', include('news.urls')),
     (r'^tuer/', include('tuer.urls')),
     (r'^status/$', 'tuer.views.status'),
+    (r'^lernhilfen/', include('lernhilfen.urls')),
 
     # Benutzerlogin/logout
     (r'^user/login/$', 'django.contrib.auth.views.login', {'template_name': 'user/login.html'}),

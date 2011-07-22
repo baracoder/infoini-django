@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h2>Lernhilfen</h2>
+<div class="lernhilfen">
+<a href="/lernhilfen/upload/">Lernhilfen hochladen</a>
+<br/>
+<br/>
+
+<form action="." method="GET">
+<div class="filelist" style="border:1px solid #ccc;border-bottom:0;clear:both;">
+        <div class="meta-head" style="text-align:left;font-size:0.9em;font-weight:bold;border-bottom:1px dotted #ccc;">
+            <ul class="filter">
+                {{ filter.form.as_ul}}
+            </ul>
+            <div align="right" style="clear:both;">
+                <input type="submit" value="suchen"/>
+                {% if user.is_staff %}
+                <a href="/lernhilfen/?{{ q }}&ungesichtet=">nur ungesichtete anzeigen</a>
+                {% endif %}
+            </div>
+        </div>
+{% for obj in l %}
+    <div class="filerow" style="background-color:{% cycle '#f9f9f9' '#f2f2f2' %};border-bottom:1px solid #ccc;clear:both;">
+        <div class="name" style="padding:2px;">
+            <a href="{{ obj.datei.url }}" target="_blank">{{ obj.name }}</a>
+            ({{ obj.endung|cut:'.' }})
+            {% if user.is_staff %}
+            <div style="float:right;">
+                {% if not obj.gesichtet %}
+                <a href="/lernhilfen/sichten/{{obj.id}}/{{ q }}">
+                    <img src="/admin/media/img/admin/icon-yes.gif" alt="als gesichtet markieren"/>
+                </a>
+                {% endif %}
+                <a href="/admin/lernhilfen/lernhilfe/{{ obj.id }}/">
+                    <img src="/admin/media/img/admin/icon_changelink.gif" alt="Bearbeiten/Löschen" />
+                </a>
+            </div>
+            {% endif %}
+
+            <div style="clear:both;"></div>
+        </div>
+        <div class="meta" style="text-align:left;font-size:0.7em;border-top:1px dotted #ccc;">
+            <span style="width:20%;display:block;float:left;">{{ obj.studiengang }}</span>
+            <span style="width:20%;display:block;float:left;">{{ obj.modul }}</span>
+            <span style="width:20%;display:block;float:left;">{{ obj.dozent }}</span>
+            <span style="width:20%;display:block;float:left;">{{ obj.semester }}</span>
+            <span style="width:20%;display:block;float:left;">{{ obj.art }}</span>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+</form>
+</div>
+{% endblock %}
