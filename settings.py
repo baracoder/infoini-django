@@ -1,5 +1,6 @@
 # Django settings for infoini project.
 import os.path
+import sys
 PWD = os.path.dirname(os.path.realpath(__file__ ))
 
 DEBUG = True
@@ -118,3 +119,10 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'django.contrib.flatpages',
 )
+
+# OVERWRITE WITH LOCAL SETTINGS
+try:
+    from local_settings import *
+except ImportError:
+    print >> sys.stderr , 'no local_settings.py loaded'
+

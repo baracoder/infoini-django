@@ -1,0 +1,12 @@
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'infoini_dg',
+        'USER': 'infoini_dg',
+        'PASSWORD': '???',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
