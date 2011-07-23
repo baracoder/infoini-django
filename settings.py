@@ -97,6 +97,7 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.core.context_processors.auth",
 "django.core.context_processors.debug",
 "django.core.context_processors.i18n",
 'django.core.context_processors.request',
+'django.contrib.messages.context_processors.messages',
 "infoini.context.glob",)
 
 AUTHENTICATION_BACKENDS = (
@@ -122,6 +123,8 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'django.contrib.flatpages',
 )
+
+MESSAGE_STORAGE='django.contrib.messages.storage.session.SessionStorage'
 
 # OVERWRITE WITH LOCAL SETTINGS
 try:
