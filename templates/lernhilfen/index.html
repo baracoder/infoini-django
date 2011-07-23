@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load pagination_tags %}
 
 
 {% block content %}
@@ -21,6 +22,7 @@
                 {% endif %}
             </div>
         </div>
+{% autopaginate l %}
 {% for obj in l %}
     <div class="filerow" style="background-color:{% cycle '#f9f9f9' '#f2f2f2' %};border-bottom:1px solid #ccc;clear:both;">
         <div class="name" style="padding:2px;">
@@ -51,6 +53,7 @@
         </div>
     </div>
 {% endfor %}
+{% paginate %}
 </div>
 
 </form>
