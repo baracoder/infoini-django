@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'django_filters',
     'django.contrib.markup',
     'django.contrib.flatpages',
+    'linaro_django_pagination',
 )
 
 MESSAGE_STORAGE='django.contrib.messages.storage.session.SessionStorage'
