@@ -72,7 +72,7 @@ class Lernhilfe(models.Model):
         verbose_name="Lernhilfe"
         verbose_name_plural="Lernhilfen"
     name = models.CharField(max_length=100)
-    datei = models.FileField('Datei',upload_to=get_full_path)
+    datei = models.FileField('Datei',upload_to=get_full_path,max_length=600)
     endung = models.CharField(max_length=40,editable=False)
     art = models.ForeignKey('Art')
     modul = models.ForeignKey('Modul')
@@ -80,7 +80,6 @@ class Lernhilfe(models.Model):
     studiengang = models.ForeignKey('Studiengang')
     semester = models.ForeignKey('Semester')
     gesichtet = models.BooleanField(default=False)
-    pfad = models.CharField(editable=False,max_length=500)
     datum = models.DateTimeField(editable=False,default=datetime.datetime.now)
 
     # methode
@@ -100,7 +99,6 @@ class Lernhilfe(models.Model):
                 os.path.join(settings.MEDIA_ROOT,old_path),
                 os.path.join(settings.MEDIA_ROOT,new_path))
             self.datei.name=new_path
-            self.pfad=new_path
             if save: self.save()
 
 
