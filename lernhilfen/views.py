@@ -5,6 +5,7 @@ from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required, permission_required
 from infoini.shortcuts import render_response
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.contrib import messages
 
 
 @csrf_protect
@@ -35,6 +36,7 @@ def upload(request):
     uploadform = forms.LernhilfenUpload(request.POST or None, request.FILES or None)
     if request.POST and uploadform.is_valid():
         uploadform.save()
+        messages.success(request,'Lernhilfe hochgeladen')
         return HttpResponseRedirect('/lernhilfen/')
 
     c = {
@@ -48,6 +50,7 @@ def sichten(request,id,params):
         l = models.Lernhilfe.objects.get(pk=id)
         l.gesichtet = True
         l.save()
+        messages.success(request,'%s gesichtet' % l.name)
         return HttpResponseRedirect('/lernhilfen/?'+params)
     else:
         return HttpResponseForbidden('Nicht gestattet')

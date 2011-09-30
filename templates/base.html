@@ -60,6 +60,14 @@ Du hast Zugriff zum <a href="/admin/">Admin-Interface</a>
             </div>
             <div id="main">
                 <div class="content">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+
                     {% block content %}
                         Kein Inhalt
                     {% endblock %}

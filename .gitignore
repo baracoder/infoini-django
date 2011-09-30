@@ -2,3 +2,4 @@
 *.swp
 *.sqlite3
 media/lernhilfen
+local_settings.py

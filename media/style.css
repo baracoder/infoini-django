@@ -38,3 +38,6 @@ body {background-color:#eee;}
 .lernhilfen .filter label {display:block;}
 .lernhilfen .filter select {width:100%;}
 
+/*lernhilfen*/
+.messages li { border:1px solid #CC0;background-color:#FF8;padding:0.1em;list-style:none;}
+.messages li.success { border:1px solid #080;background-color:#dfd;}

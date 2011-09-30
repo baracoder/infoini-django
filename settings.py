@@ -81,6 +81,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'linaro_django_pagination.middleware.PaginationMiddleware',
 )
 
 ROOT_URLCONF = 'infoini.urls'
@@ -97,6 +98,7 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.core.context_processors.auth",
 "django.core.context_processors.debug",
 "django.core.context_processors.i18n",
 'django.core.context_processors.request',
+'django.contrib.messages.context_processors.messages',
 "infoini.context.glob",)
 
 AUTHENTICATION_BACKENDS = (
@@ -121,7 +123,10 @@ INSTALLED_APPS = (
     'django_filters',
     'django.contrib.markup',
     'django.contrib.flatpages',
+    'linaro_django_pagination',
 )
+
+MESSAGE_STORAGE='django.contrib.messages.storage.session.SessionStorage'
 
 # OVERWRITE WITH LOCAL SETTINGS
 try:
