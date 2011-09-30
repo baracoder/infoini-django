@@ -1,0 +1,50 @@
+# Doku siehe http://code.google.com/p/modwsgi/wiki/IntegrationWithDjango
+
+<VirtualHost *:443>
+    #TODO
+    ServerAdmin webmaster@localhost
+
+    # Grundeinstellungen
+    DocumentRoot /local/infoini_dg/infoini/media
+    <Directory />
+        AllowOverride None
+        Order allow,deny
+        deny from all
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    LogLevel warn
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    # Statische Dateien
+    Alias /media/ /local/infoini_dg/infoini/media/
+    <Directory /local/infoini_dg/infoini/media>
+        ExpiresActive on
+        ExpiresDefault "access 2 days"
+        Options -Indexes FollowSymLinks
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    # Statische Daten Admin
+    Alias /admin/media/ /usr/share/pyshared/django/contrib/admin/media/
+    <Directory /usr/share/pyshared/django/contrib/admin/media>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    # Django WSGI
+    WSGIDaemonProcess infoini_dg user=infoini_dg group=infoini_dg
+    WSGIProcessGroup infoini_dg
+    WSGIScriptAlias / /local/infoini_dg/infoini/apache/django.wsgi
+    <Directory /local/infoini_dg/infoini/apache>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    # SSL an
+    SSLEngine On
+    SSLCertificateFile /etc/apache2/ssl/apache.pem
+
+
+</VirtualHost>
