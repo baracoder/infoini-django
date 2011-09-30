@@ -3,10 +3,20 @@ NameVirtualHost *:443
 
 <VirtualHost *:443>
     #TODO
-    ServerAdmin webmaster@localhost
+    ServerAdmin admin@infoini.de
 
     # Grundeinstellungen
-    DocumentRoot /local/infoini_dg/infoini/media
+    DocumentRoot /var/www
+
+    # Redmine
+    RailsBaseURI /redmine
+    <Directory /var/www/redmine>
+        Order deny,allow
+        AllowOverride All
+        Allow from all
+    </Directory>
+
+
     <Directory />
         AllowOverride None
         Order allow,deny
