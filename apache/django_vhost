@@ -46,7 +46,7 @@
     # Django WSGI
     WSGIDaemonProcess infoini_dg user=infoini_dg group=infoini_dg
     WSGIProcessGroup infoini_dg
-    WSGIScriptAlias / /local/infoini_dg/infoini/apache/django.wsgi
+    WSGIScriptAliasMatch ^\/(?!redmine(.*)) /local/infoini_dg/infoini/apache/django.wsgi
     <Directory /local/infoini_dg/infoini/apache>
         Order deny,allow
         Allow from all
