@@ -1,4 +1,5 @@
 # Doku siehe http://code.google.com/p/modwsgi/wiki/IntegrationWithDjango
+NameVirtualHost *:443
 
 <VirtualHost *:443>
     #TODO
