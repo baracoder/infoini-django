@@ -1,0 +1,20 @@
+
+{% if user.is_authenticated %}
+Hallo {{ user.username }}!
+<a href="/user/logout/">Ausloggen</a>?
+{% if user.is_staff %}
+Du hast Zugriff zum <a href="/admin/">Admin-Interface</a>
+{% endif %}
+{% else %}
+<form method="post" action="/user/login/">
+{% csrf_token %}
+    <label for="id_username">HRZ-Kennung</label>
+    <input id="id_username" type="text" name="username" maxlength="30" />
+    <label for="id_password">Passwort</label>
+    <input type="password" name="password" id="id_password" />
+
+<input type="submit" value="Login" />
+<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+</form>
+
+{% endif %}
