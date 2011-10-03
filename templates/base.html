@@ -41,22 +41,24 @@ Du hast Zugriff zum <a href="/admin/">Admin-Interface</a>
                 </div>
                 <div id="top_links">
                     {% block links %}
-                    <a href="/news/">News</a>
-                    <a href="/lernhilfen/">Lernhilfen</a>
-                    <a href="/redmine/">Projekte <img src="/media/redmine.png" border="0"/></a>
-                    <a href="/personen/">Personen</a>
-                    <a href="/kontakt/">Kontakt</a>
-                    <a href="/impressum/">Impressum</a>
+                    <a href="/news/" id="toplink_news">News</a>
+                    <a href="/lernhilfen/" id="toplink_lernhilfen">Lernhilfen</a>
+                    <a href="/redmine/" id="toplink_projekte">Projekte</a>
+                    <a href="/redmine/projects/fsropen/boards/" id="toplink_foren">Foren</a>
+                    <a href="/personen/" id="toplink_personen">Personen</a>
+                    <a href="/kontakt/" id="toplink_kontakt">Kontakt</a>
+                    <a href="/impressum/" id="toplink_impressum">Impressum</a>
                     {% endblock %}
-                    <div id="tuer"><a href="/tuer/">Tür</a>
-                        {% block tuer %}
+                    {% block tuer %}
+                    <div id="tuer" class="{% if ist_offen %}offen{% else %}geschlossen{% endif %}">
+                        <a href="/tuer/">Tür</a>
                         {% if ist_offen %}
                             <span class="offen">offen</span>
                         {% else %}
                             <span class="geschlossen">geschlossen</span>
                         {% endif %}
-                        {% endblock %}
                     </div>
+                    {% endblock %}
                 </div>
             </div>
             <div id="main">
