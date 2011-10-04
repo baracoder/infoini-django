@@ -24,7 +24,7 @@ body {background-color:#eee;}
 #toplink_impressum  { }
 #top #top_links a:hover {background-color:#CCC;}
 
-#top #tuer {float:right;width:100px;text-align:right;}
+#top #tuer {float:right;width:146px;text-align:right;}
 #top #tuer a {padding-left:20px;background-repeat:no-repeat;background-position:left center;}
 #top #tuer.offen       a {background-image:url('/media/icons/door_open.png');}
 #top #tuer.geschlossen a {background-image:url('/media/icons/door.png');}
