@@ -14,7 +14,7 @@ body {background-color:#eee;}
 #top #login_box {width:200px;background-color:#333;float:right;height:100px;padding:10px;}
 
 #top #top_links {clear:both;background-color:#aaa;color:#FFF;padding:0.2em;}
-#top #top_links a {margin-left:10px;color:#028999;text-decoration:none;background-position:left center;background-repeat:no-repeat;}
+#top #top_links a {margin-left:10px;color:#028999;text-decoration:none;background-position:left center;background-repeat:no-repeat; font-size:0.96em;}
 #toplink_news       { }
 #toplink_lernhilfen {padding-left:20px; background-image:url('/media/icons/book.png');}
 #toplink_projekte   {padding-left:20px; background-image:url('/media/icons/redmine.png');}
