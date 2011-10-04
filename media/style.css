@@ -46,7 +46,9 @@ body {background-color:#eee;}
 
 /* news       --------------------------------------------------------- */
 #main .content .entry .meta {font-size:0.7em;text-align:right;}
-#main .content .entry p {font-size:0.9em;line-height:1.2em;margin:0;padding-bottom:1em;}
+#main .content .entry {line-height:1.2em;margin:0;padding-bottom:1em;}
+#main .content .entry li {margin-left:2em;}
+
 
 
 /* lernhilfen --------------------------------------------------------- */
