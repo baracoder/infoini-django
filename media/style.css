@@ -7,11 +7,12 @@ body {background-color:#eee;}
 
 /* Header ------------------------------------------------------------- */
 #top {background-color:#000; color:#CCC;}
-#top .content {padding:1em;} 
+#top .content {height:100px;padding:10px;}
 #top #logo {float:left;width:5.8em;margin-right:2em;}
 #top h1 {font-size:2.0em;float:left;width:10em;margin:0;}
 #top h2 {font-size:0.7em;float:left;width:23em;}
-#top #login_box {border:#888 solid 1px;width:10em;float:right;}
+#top #login_box {width:200px;background-color:#333;float:right;height:100px;padding:10px;}
+
 #top #top_links {clear:both;background-color:#aaa;color:#FFF;padding:0.2em;}
 #top #top_links a {margin-left:10px;color:#028999;text-decoration:none;background-position:left center;background-repeat:no-repeat;}
 #toplink_news       { }
@@ -41,15 +42,26 @@ body {background-color:#eee;}
 }
 #main .content {padding:1em;color:#444;}
 #main .content h2 {margin:0;border-bottom:1px dotted #CCC;}
-#main .content .meta {font-size:0.7em;text-align:right;float:right;}
-#main .content p {font-size:0.9em;line-height:1.2em;margin:0;padding-bottom:1em;}
+
+
+/* news       --------------------------------------------------------- */
+#main .content .entry .meta {font-size:0.7em;text-align:right;}
+#main .content .entry p {font-size:0.9em;line-height:1.2em;margin:0;padding-bottom:1em;}
 
 
 /* lernhilfen --------------------------------------------------------- */
 .lernhilfen ul.filter { margin:0;}
 .lernhilfen .filter li {width:20%;display:block;float:left;}
 .lernhilfen .filter label {display:block;}
-.lernhilfen .filter select {width:100%;}
+.lernhilfen .filter select {width:99%;}
+.lernhilfen div.meta { font-size:0.7em;border-top:1px dotted #ccc;}
+.lernhilfen .meta span { text-align:left; display:block;float:left; width:20%;}
+.lernhilfen .filelist { border:1px solid #ccc;border-bottom:0;clear:both; }
+.lernhilfen .meta-head { text-align:left;font-size:0.9em;font-weight:bold;border-bottom:1px dotted #ccc; background-color:#eee; }
 
+/* messages   --------------------------------------------------------- */
 .messages li { border:1px solid #CC0;background-color:#FF8;padding:0.1em;list-style:none;}
 .messages li.success { border:1px solid #080;background-color:#dfd;}
+/* inputs     --------------------------------------------------------- */
+input,select,textarea { background-color:#fff; color:#000; border:1px solid black;margin-bottom:1px;}
+input[type="submit"] { background-color:#c1f8ff;}
