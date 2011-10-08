@@ -6,8 +6,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/news/'}),
-    (r'^news/', include('news.urls')),
+    (r'^$', 'django.views.generic.simple.redirect_to',
+             {'url': '/redmine/projects/fsropen/wiki'}),
     (r'^tuer/', include('tuer.urls')),
     (r'^status/$', 'tuer.views.status'),
     (r'^lernhilfen/', include('lernhilfen.urls')),

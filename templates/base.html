@@ -11,15 +11,6 @@
             <div id="top">
                 <div id="login_box">
                     {% include "login_box.html" %}
-                </div>
-                <div class="content">
-                    <a href="/"><img src="/media/logo.png" id="logo" border="0" alt="infoini"/></a>
-                    <h1>www.infoini.de</h1>
-                    <h2>Webseite des FSR6: Fachschaft des Fachbereichs VI
-                    der Beuth Hochschule für Technik Berlin</h2>
-                    <div class="clear"></div>
-                </div>
-                <div id="top_links">
                     {% block tuer %}
                     <div id="tuer" class="{% if ist_offen %}offen{% else %}geschlossen{% endif %}">
                         <a href="/tuer/">Tür</a>
@@ -30,15 +21,13 @@
                         {% endif %}
                     </div>
                     {% endblock %}
-                    {% block links %}
-                    <a href="/news/" id="toplink_news">News</a>
-                    <a href="/lernhilfen/" id="toplink_lernhilfen">Lernhilfen</a>
-                    <a href="/redmine/" id="toplink_projekte">Projekte</a>
-                    <a href="/redmine/projects/fsropen/boards/" id="toplink_foren">Foren</a>
-                    <a href="/personen/" id="toplink_personen">Personen</a>
-                    <a href="/kontakt/" id="toplink_kontakt">Kontakt</a>
-                    <a href="/impressum/" id="toplink_impressum">Impressum</a>
-                    {% endblock %}
+                </div>
+                <div class="content">
+                    <a href="/"><img src="/media/logo.png" id="logo" border="0" alt="infoini"/></a>
+                    <h1>www.infoini.de</h1>
+                    <h2>Webseite des FSR6: Fachschaft des Fachbereichs VI
+                    der Beuth Hochschule für Technik Berlin</h2>
+                    <div class="clear"></div>
                 </div>
             </div>
             <div id="main">

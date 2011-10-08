@@ -117,12 +117,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'news',
+    #'news',
     'tuer',
     'lernhilfen',
     'django_filters',
     'django.contrib.markup',
-    'django.contrib.flatpages',
+    #'django.contrib.flatpages',
     'linaro_django_pagination',
 )
 
