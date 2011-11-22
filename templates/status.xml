@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/media/status/conv.xsl" ?>
 <infoini>
     <door isOpen="{% if status %}true{% else %}false{% endif %}" />
+    <cafe>
+    {% for p in cafepots %}
+        <pot>
+            <status>{{ p.status }}</status>
+            <level>{{ p.level }}</level>
+        </pot>
+    {% endfor %}
+    </cafe>
 </infoini>
