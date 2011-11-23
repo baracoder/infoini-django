@@ -128,6 +128,14 @@ INSTALLED_APPS = (
 
 MESSAGE_STORAGE='django.contrib.messages.storage.session.SessionStorage'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake'
+    }
+}
+
+
 # OVERWRITE WITH LOCAL SETTINGS
 try:
     from local_settings import *
