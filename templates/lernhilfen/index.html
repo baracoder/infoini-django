@@ -7,13 +7,15 @@
 <div class="lernhilfen">
 <a href="/lernhilfen/upload/">Lernhilfen hochladen</a>
 <br/>
+<p>
 <strong>Alte lernhilfen sind noch nicht importiert. Wie ihr an diese ran
 kommt, erfahrt ihr bei uns im INI-Raum.</strong>
+</p>
 <br/>
 
 <form action="." method="GET">
-<div class="filelist" style="border:1px solid #ccc;border-bottom:0;clear:both;">
-        <div class="meta-head" style="text-align:left;font-size:0.9em;font-weight:bold;border-bottom:1px dotted #ccc;">
+<div class="filelist">
+        <div class="meta-head">
             <ul class="filter">
                 {{ filter.form.as_ul}}
             </ul>
@@ -45,12 +47,12 @@ kommt, erfahrt ihr bei uns im INI-Raum.</strong>
 
             <div style="clear:both;"></div>
         </div>
-        <div class="meta" style="text-align:left;font-size:0.7em;border-top:1px dotted #ccc;">
-            <span style="width:20%;display:block;float:left;">{{ obj.studiengang }}</span>
-            <span style="width:20%;display:block;float:left;">{{ obj.modul }}</span>
-            <span style="width:20%;display:block;float:left;">{{ obj.dozent }}</span>
-            <span style="width:20%;display:block;float:left;">{{ obj.semester }}</span>
-            <span style="width:20%;display:block;float:left;">{{ obj.art }}</span>
+        <div class="meta">
+            <span>{{ obj.studiengang }}</span>
+            <span>{{ obj.modul }}</span>
+            <span>{{ obj.dozent }}</span>
+            <span>{{ obj.semester }}</span>
+            <span>{{ obj.art }}</span>
             <div style="clear:both;"></div>
         </div>
     </div>

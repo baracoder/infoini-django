@@ -2,22 +2,36 @@
 .clear {clear:both;}
 a {color:#028999;text-decoration:none;}
 a:hover {border-bottom:1px dotted #028999;}
-
 body {background-color:#eee;}
 #frame {width:43em;border:1px solid #ccc;margin:auto auto;background-color:#fff;}
+
+/* Header ------------------------------------------------------------- */
 #top {background-color:#000; color:#CCC;}
-#top .content {padding:1em;} 
+#top .content {height:100px;padding:10px;}
 #top #logo {float:left;width:5.8em;margin-right:2em;}
 #top h1 {font-size:2.0em;float:left;width:10em;margin:0;}
 #top h2 {font-size:0.7em;float:left;width:23em;}
-#top #login_box {border:#888 solid 1px;width:10em;float:right;}
-#top #tuer {float:right;}
-#top #tuer .offen {background-color:green;}
-#top #tuer .geschlossen {background-color:red;}
-#top #tuer .keinstatus {background-color:#990;}
+#top #login_box {width:200px;background-color:#333;float:right;height:100px;padding:10px;}
+
 #top #top_links {clear:both;background-color:#aaa;color:#FFF;padding:0.2em;}
-#top #top_links a {padding:0.3em;color:#028999;text-decoration:none;}
+#top #top_links a {margin-left:10px;color:#028999;text-decoration:none;background-position:left center;background-repeat:no-repeat; font-size:0.96em;}
+#toplink_news       { }
+#toplink_lernhilfen {padding-left:20px; background-image:url('/media/icons/book.png');}
+#toplink_projekte   {padding-left:20px; background-image:url('/media/icons/redmine.png');}
+#toplink_foren      {padding-left:20px; background-image:url('/media/icons/layout.png');}
+#toplink_personen   { }
+#toplink_kontakt    { }
+#toplink_impressum  { }
 #top #top_links a:hover {background-color:#CCC;}
+
+#top #tuer {float:right;width:146px;text-align:right;}
+#top #tuer a {padding-left:20px;background-repeat:no-repeat;background-position:left center;}
+#top #tuer.offen       a {background-image:url('/media/icons/door_open.png');}
+#top #tuer.geschlossen a {background-image:url('/media/icons/door.png');}
+#top #tuer.offen       span{background-color:green;}
+#top #tuer.geschlossen span{background-color:red;}
+
+/* Main   ------------------------------------------------------------- */
 #main {
     -moz-box-shadow:    inset 0px 1px 5px #333;
     -webkit-box-shadow: inset 0px 1px 5px #333;
@@ -27,17 +41,29 @@ body {background-color:#eee;}
 
 }
 #main .content {padding:1em;color:#444;}
-#main .content h2 {margin:0;}
-#main .content .meta {font-size:0.7em;text-align:right;border-top:1px dotted #CCC;}
-#main .content p {font-size:0.9em;line-height:1.2em;margin:0;padding-bottom:1em;}
+#main .content h2 {margin:0;border-bottom:1px dotted #CCC;}
 
 
-/*lernhilfen*/
+/* news       --------------------------------------------------------- */
+#main .content .entry .meta {font-size:0.7em;text-align:right;}
+#main .content .entry {line-height:1.2em;margin:0;padding-bottom:1em;}
+#main .content .entry li {margin-left:2em;}
+
+
+
+/* lernhilfen --------------------------------------------------------- */
 .lernhilfen ul.filter { margin:0;}
 .lernhilfen .filter li {width:20%;display:block;float:left;}
 .lernhilfen .filter label {display:block;}
-.lernhilfen .filter select {width:100%;}
+.lernhilfen .filter select {width:99%;}
+.lernhilfen div.meta { font-size:0.7em;border-top:1px dotted #ccc;}
+.lernhilfen .meta span { text-align:left; display:block;float:left; width:20%;}
+.lernhilfen .filelist { border:1px solid #ccc;border-bottom:0;clear:both; }
+.lernhilfen .meta-head { text-align:left;font-size:0.9em;font-weight:bold;border-bottom:1px dotted #ccc; background-color:#eee; }
 
-/*lernhilfen*/
+/* messages   --------------------------------------------------------- */
 .messages li { border:1px solid #CC0;background-color:#FF8;padding:0.1em;list-style:none;}
 .messages li.success { border:1px solid #080;background-color:#dfd;}
+/* inputs     --------------------------------------------------------- */
+input,select,textarea { background-color:#fff; color:#000; border:1px solid black;margin-bottom:1px;}
+input[type="submit"] { background-color:#c1f8ff;}

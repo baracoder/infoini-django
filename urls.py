@@ -6,11 +6,10 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/news/'}),
-    (r'^news/', include('news.urls')),
-    (r'^tuer/', 'django.views.generic.simple.redirect_to', {'url': '/status.html'}),
     (r'^status/$', 'status.views.status'),
     (r'^status.html$', 'status.views.status_html'),
+    (r'^$', 'django.views.generic.simple.redirect_to',
+             {'url': '/redmine/projects/fsropen/wiki'}),
     (r'^lernhilfen/', include('lernhilfen.urls')),
 
     # Benutzerlogin/logout

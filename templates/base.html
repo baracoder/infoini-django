@@ -9,54 +9,25 @@
 
         <div id="frame">
             <div id="top">
-                <div class="content">
-                    <div id="login_box">
-
-{% if user.is_authenticated %}
-Hallo {{ user.username }}!
-<a href="/user/logout/">Ausloggen</a>?
-{% if user.is_staff %}
-Du hast Zugriff zum <a href="/admin/">Admin-Interface</a>
-{% endif %}
-{% else %}
-<form method="post" action="/user/login/">
-{% csrf_token %}
-    <label for="id_username">HRZ-Kennung</label>
-    <input id="id_username" type="text" name="username" maxlength="30" />
-    <label for="id_password">Passwort</label>
-    <input type="password" name="password" id="id_password" />
-
-<input type="submit" value="Login" />
-<input type="hidden" name="next" value="{{ request.get_full_path }}" />
-</form>
-
-{% endif %}
-
-                    </div>
-                    <a href="/"><img src="/media/logo.png" id="logo" border="0"/></a>
-                    <h1>www.infoini.de</h1>
-                    <h2>Webseite des FSR6: Fachschaft des Fachbereichs VI
-                    der Beuth Hochschule fuer Technik Berlin</h2>
-                    <div class="clear"></div>
-                </div>
-                <div id="top_links">
-                    {% block links %}
-                    <a href="/news/">News</a>
-                    <a href="/lernhilfen/">Lernhilfen</a>
-                    <a href="/redmine/">Projekte <img src="/media/redmine.png" border="0"/></a>
-                    <a href="/personen/">Personen</a>
-                    <a href="/kontakt/">Kontakt</a>
-                    <a href="/impressum/">Impressum</a>
-                    {% endblock %}
-                    <div id="tuer"><a href="/status.html">Tür</a>
-                        {% block tuer %}
+                <div id="login_box">
+                    {% include "login_box.html" %}
+                    {% block tuer %}
+                    <div id="tuer" class="{% if ist_offen %}offen{% else %}geschlossen{% endif %}">
+                        <a href="/status.html">Tür</a>
                         {% if ist_offen %}
                             <span class="offen">offen</span>
                         {% else %}
                             <span class="geschlossen">geschlossen</span>
                         {% endif %}
-                        {% endblock %}
                     </div>
+                    {% endblock %}
+                </div>
+                <div class="content">
+                    <a href="/"><img src="/media/logo.png" id="logo" border="0" alt="infoini"/></a>
+                    <h1>www.infoini.de</h1>
+                    <h2>Webseite des FSR6: Fachschaft des Fachbereichs VI
+                    der Beuth Hochschule für Technik Berlin</h2>
+                    <div class="clear"></div>
                 </div>
             </div>
             <div id="main">
