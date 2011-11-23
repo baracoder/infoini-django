@@ -8,8 +8,9 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/news/'}),
     (r'^news/', include('news.urls')),
-    (r'^tuer/', 'django.views.generic.simple.redirect_to', {'url': '/status/'}),
+    (r'^tuer/', 'django.views.generic.simple.redirect_to', {'url': '/status.html'}),
     (r'^status/$', 'status.views.status'),
+    (r'^status.html$', 'status.views.status_html'),
     (r'^lernhilfen/', include('lernhilfen.urls')),
 
     # Benutzerlogin/logout

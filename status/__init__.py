@@ -49,4 +49,4 @@ def _get_pot_data(ser_port):
             return val_tuple[0]
 
 def _get_pot_level(val,val_min, val_max):
-    return (val-val_min)/(val_max-val_min)
+    return round( (val-val_min) / (val_max-val_min) )
