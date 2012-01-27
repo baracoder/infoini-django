@@ -14,8 +14,8 @@ class SensorServerHandler(SocketServer.BaseRequestHandler):
 
     def handle(self):
         # TODO
-        print "request"
         data = json.dumps(get_all())
+        print "request: " + data
         self.request.send(data)
 
 class SensorThreadServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
@@ -33,8 +33,8 @@ def ist_offen():
 
 def potinfo():
     pots = [
-        {'port':"/dev/ttyUSB0",'val_min':552,'val_max':900},
-        {'port':"/dev/ttyUSB1",'val_min':0,'val_max':800},
+        {'port':"/dev/ttyUSB0",'val_min':552,'val_max':600},
+        {'port':"/dev/ttyUSB1",'val_min':0,'val_max':600},
     ]
 
     info_list = []
