@@ -30,10 +30,10 @@ color: black;
 h1 {font-size:1.7em;}
 h1 a { border:0;color:#fff;}
 h2 {font-size:1.2em;}
-a {color:#028999;text-decoration:none;border-bottom:0.04em #fff dashed;}
-sup{font-size:0.7em;vertical-align:top;}
+a {color:#028999;text-decoration:none;border-bottom:1px #fff dashed;}
+sup{font-size:0.7em;}
 
-.frame { margin-right:auto;margin-left:auto; max-width:800px; }
+.frame { margin-right:auto;margin-left:auto; max-width:800px;margin-bottom:3em; }
 .login { float:right;position:relative;top:-3.5em; text-align:right;font-size:0.6em;}
 
 /* lernhilfen --------------------------------------------------------- */
