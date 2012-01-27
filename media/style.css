@@ -55,6 +55,7 @@ sup{font-size:0.7em;}
 .messages li.success { border:1px solid #080;background-color:#dfd;}
 /* inputs     --------------------------------------------------------- */
 input,select,textarea { background-color:#333; color:#fff; border:1px solid black;margin-bottom:1px;}
+option { background-color:#333;}
 input[type="submit"] { background-color:#028999;}
 
 
