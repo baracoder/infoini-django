@@ -4,51 +4,28 @@
         <title>{% block title %}infoINI{% endblock %}</title>
         <link rel="stylesheet" href="/media/style.css" type="text/css"/>
         <link rel="shortcut icon" href="/media/favicon.ico" />
+        <meta name="HandheldFriendly" content="true" />
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     </head>
     <body>
-
-        <div id="frame">
-            <div id="top">
-                <div id="login_box">
-                    {% include "login_box.html" %}
-                    {% block tuer %}
-                    <div id="tuer" class="{% if ist_offen %}offen{% else %}geschlossen{% endif %}">
-                        <a href="/status.html">Tür</a>
-                        {% if ist_offen %}
-                            <span class="offen">offen</span>
-                        {% else %}
-                            <span class="geschlossen">geschlossen</span>
-                        {% endif %}
-                    </div>
-                    {% endblock %}
-                </div>
-                <div class="content">
-                    <a href="/"><img src="/media/logo.png" id="logo" border="0" alt="infoini"/></a>
-                    <h1>www.infoini.de</h1>
-                    <h2>Webseite des FSR6: Fachschaft des Fachbereichs VI
-                    der Beuth Hochschule für Technik Berlin</h2>
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <div id="main">
-                <div class="content">
-                    {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-
-                    {% block content %}
-                        Kein Inhalt
-                    {% endblock %}
-                </div>
-            </div>
-
-
+    <div class="frame">
+        <h1><a href="/"><img src="/media/logo_32.png"/> InfoINI {% block heading %}{% endblock %}</a></h1>
+        <div class="login">{% include "login_box.html" %}</div>
+        {% if messages %}
+        <div align="left" class="block">
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
         </div>
+        {% endif %}
 
-
+        {% block content %}
+        <div align="left" class="block">
+            Kein Inhalt
+        </div>
+        {% endblock %}
+    </div>
     </body>
 </html>

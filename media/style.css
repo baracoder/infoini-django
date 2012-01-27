@@ -1,69 +1,60 @@
-* {padding:0; font-family:Arial;}
-.clear {clear:both;}
-a {color:#028999;text-decoration:none;}
-a:hover {border-bottom:1px dotted #028999;}
-body {background-color:#eee;}
-#frame {width:43em;border:1px solid #ccc;margin:auto auto;background-color:#fff;}
 
-/* Header ------------------------------------------------------------- */
-#top {background-color:#000; color:#CCC;}
-#top .content {height:100px;padding:10px;}
-#top #logo {float:left;width:5.8em;margin-right:2em;}
-#top h1 {font-size:2.0em;float:left;width:10em;margin:0;}
-#top h2 {font-size:0.7em;float:left;width:23em;}
-#top #login_box {width:200px;background-color:#333;float:right;height:100px;padding:10px;}
+/* -------------------------------------------------------------------------------------------------------- */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}
+body{line-height:1}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}
+:focus{outline:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+body{font:13px/1.5 'Helvetica Neue',Arial,'Liberation Sans',FreeSans,sans-serif}
+a:focus{outline:1px dotted}hr{border:0 #ccc solid;border-top-width:1px;clear:both;height:0}
+ol{list-style:decimal}ul{list-style:disc}li{margin-left:30px}p,dl,hr,h1,h2,h3,h4,h5,h6,ol,ul,pre,table,address,fieldset{margin-bottom:20px}
 
-#top #top_links {clear:both;background-color:#aaa;color:#FFF;padding:0.2em;}
-#top #top_links a {margin-left:10px;color:#028999;text-decoration:none;background-position:left center;background-repeat:no-repeat; font-size:0.96em;}
-#toplink_news       { }
-#toplink_lernhilfen {padding-left:20px; background-image:url('/media/icons/book.png');}
-#toplink_projekte   {padding-left:20px; background-image:url('/media/icons/redmine.png');}
-#toplink_foren      {padding-left:20px; background-image:url('/media/icons/layout.png');}
-#toplink_personen   { }
-#toplink_kontakt    { }
-#toplink_impressum  { }
-#top #top_links a:hover {background-color:#CCC;}
-
-#top #tuer {float:right;width:146px;text-align:right;}
-#top #tuer a {padding-left:20px;background-repeat:no-repeat;background-position:left center;}
-#top #tuer.offen       a {background-image:url('/media/icons/door_open.png');}
-#top #tuer.geschlossen a {background-image:url('/media/icons/door.png');}
-#top #tuer.offen       span{background-color:green;}
-#top #tuer.geschlossen span{background-color:red;}
-
-/* Main   ------------------------------------------------------------- */
-#main {
-    -moz-box-shadow:    inset 0px 1px 5px #333;
-    -webkit-box-shadow: inset 0px 1px 5px #333;
-    box-shadow:         inset 0px 1px 5px #333;
-    min-height:20em;
-
-
+body{background-color: #232323; color: #fff;font-size:1.6em;margin:1em;}
+.block {
+        color: #fff !important; text-align: center; margin: auto;
+        background: #343434;
+color:black;
+-moz-border-radius:15px;
+-webkit-border-radius:15px;
+border-radius:15px;
+/*IE DOES NOT SUPPORT BORDER RADIUS*/
+-moz-box-shadow:0px 0px 1px #000000;
+-webkit-box-shadow:0px 0px 1px #000000;
+box-shadow:0px 0px 1px #000000;
+/*IE DOES NOT SUPPORT BLUR PROPERTY OF SHADOWS*/
+padding: 1em;
+margin-bottom: 1em;
+color: black;
 }
-#main .content {padding:1em;color:#444;}
-#main .content h2 {margin:0;border-bottom:1px dotted #CCC;}
+h1 {font-size:1.7em;}
+h1 a { border:0;color:#fff;}
+h2 {font-size:1.2em;}
+a {color:#028999;text-decoration:none;border-bottom:0.04em #fff dashed;}
+sup{font-size:0.7em;vertical-align:top;}
 
-
-/* news       --------------------------------------------------------- */
-#main .content .entry .meta {font-size:0.7em;text-align:right;}
-#main .content .entry {line-height:1.2em;margin:0;padding-bottom:1em;}
-#main .content .entry li {margin-left:2em;}
-
-
+.frame { margin-right:auto;margin-left:auto; max-width:800px; }
+.login { float:right;position:relative;top:-3.5em; text-align:right;font-size:0.6em;}
 
 /* lernhilfen --------------------------------------------------------- */
+.lernhilfen { font-size:0.8em;padding-left:0;padding-right:0;}
 .lernhilfen ul.filter { margin:0;}
-.lernhilfen .filter li {width:20%;display:block;float:left;}
-.lernhilfen .filter label {display:block;}
-.lernhilfen .filter select {width:99%;}
-.lernhilfen div.meta { font-size:0.7em;border-top:1px dotted #ccc;}
+.lernhilfen .filter li {width:20%;display:block;float:left;margin:0;}
+.lernhilfen .filter label {display:block;margin:1px;}
+.lernhilfen .filter select {width:99%;margin:1px;}
+.lernhilfen div.meta { font-size:0.6em;border-top:1px dotted #666;}
 .lernhilfen .meta span { text-align:left; display:block;float:left; width:20%;}
-.lernhilfen .filelist { border:1px solid #ccc;border-bottom:0;clear:both; }
-.lernhilfen .meta-head { text-align:left;font-size:0.9em;font-weight:bold;border-bottom:1px dotted #ccc; background-color:#eee; }
+.lernhilfen .filelist { border-top:1px solid #222;border-bottom:0;clear:both; }
+.lernhilfen .meta-head { text-align:left;font-size:0.9em;font-weight:bold;border-bottom:1px dotted #666; background-color:#444; }
+.lernhilfen .filerow { border-bottom:1px solid #666;clear:both; }
+.lernhilfen .filerow1 { background-color:#353535;}
+.lernhilfen .filerow2 { background-color:#454545;}
 
 /* messages   --------------------------------------------------------- */
 .messages li { border:1px solid #CC0;background-color:#FF8;padding:0.1em;list-style:none;}
 .messages li.success { border:1px solid #080;background-color:#dfd;}
 /* inputs     --------------------------------------------------------- */
-input,select,textarea { background-color:#fff; color:#000; border:1px solid black;margin-bottom:1px;}
-input[type="submit"] { background-color:#c1f8ff;}
+input,select,textarea { background-color:#333; color:#fff; border:1px solid black;margin-bottom:1px;}
+input[type="submit"] { background-color:#028999;}
+
+

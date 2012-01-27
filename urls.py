@@ -1,15 +1,17 @@
 from django.conf.urls.defaults import *
 from infoini import settings
+from django.views.generic.simple import direct_to_template
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^status/$', 'status.views.status'),
+    (r'^status/$', 'status.views.status_xml'),
+    (r'^status.xml$', 'status.views.status_xml'),
     (r'^status.html$', 'status.views.status_html'),
-    (r'^$', 'django.views.generic.simple.redirect_to',
-             {'url': '/redmine/projects/fsropen/wiki'}),
+    (r'^status.json$', 'status.views.status_json'),
+    (r'^$', direct_to_template, {'template': 'index.html'}),
     (r'^lernhilfen/', include('lernhilfen.urls')),
 
     # Benutzerlogin/logout

@@ -1,18 +1,19 @@
 {% extends "base.html" %}
+{% block title %}Lernhilfen hochladen{% endblock %}
+{% block heading %}Lernhilfen hochladen{% endblock %}
 
 {% block content %}
-<h2>Lernhilfen hochladen</h2>
-
-
-<form action="./" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-    {{ uploadform.as_table}}
-    <tr>
-        <td></td>
-        <td><input type="submit" value="senden"/></td>
-    </table>
-</form>
+<div class="lernhilfen block">
+    <form action="./" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+        {{ uploadform.as_table}}
+        <tr>
+            <td></td>
+            <td><input type="submit" value="hochladen"/></td>
+        </table>
+    </form>
+</div>
 
 
 {% endblock %}

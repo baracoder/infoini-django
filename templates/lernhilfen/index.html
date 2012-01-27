@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 {% load pagination_tags %}
+{% block title %}Lernhilfen{% endblock %}
+{% block heading %}Lernhilfen{% endblock %}
 
 
 {% block content %}
-<h2>Lernhilfen</h2>
-<div class="lernhilfen">
-<a href="/lernhilfen/upload/">Lernhilfen hochladen</a>
-<br/>
-<p>
-<strong>Alte lernhilfen sind noch nicht importiert. Wie ihr an diese ran
-kommt, erfahrt ihr bei uns im INI-Raum.</strong>
-</p>
-<br/>
+<div class="block">
+    <a href="/lernhilfen/upload/">Lernhilfen hochladen</a>
+    <br/>
+    <p>
+        Alte lernhilfen sind noch nicht importiert. Wie ihr an diese ran
+        kommt, erfahrt ihr bei uns im INI-Raum.
+    </p>
+</div>
 
+<div class="lernhilfen block">
 <form action="." method="GET">
 <div class="filelist">
         <div class="meta-head">
@@ -20,18 +22,18 @@ kommt, erfahrt ihr bei uns im INI-Raum.</strong>
                 {{ filter.form.as_ul}}
             </ul>
             <div align="right" style="clear:both;">
-                <input type="submit" value="suchen"/>
                 {% if user.is_staff %}
                 <a href="/lernhilfen/?{{ q }}&ungesichtet=">nur ungesichtete anzeigen</a>
                 {% endif %}
+                <input type="submit" value="suchen"/>
             </div>
         </div>
 {% autopaginate l %}
 {% for obj in l %}
-    <div class="filerow" style="background-color:{% cycle '#f9f9f9' '#f2f2f2' %};border-bottom:1px solid #ccc;clear:both;">
-        <div class="name" style="padding:2px;">
+    <div class="filerow filerow{% cycle '1' '2' %}">
+        <div class="name" style="padding:2px;text-align:left;">
             <a href="{{ obj.datei.url }}" target="_blank">{{ obj.name }}</a>
-            ({{ obj.endung|cut:'.' }})
+            <sup>({{ obj.endung|cut:'.' }})</sup>
             {% if user.is_staff %}
             <div style="float:right;">
                 {% if not obj.gesichtet %}

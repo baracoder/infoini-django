@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% block title %}Lernhilfen{% endblock %}
+{% block heading %}Lernhilfen{% endblock %}
 
 {% block content %}
+    <div class="block">
 
 {% if user.is_authenticated %}
-Sie sind bereits eingeloggt. <a href="/user/logout/">Ausloggen</a>?
+Sie sind bereits angemeldet. <a href="/user/logout/">Ausloggen</a>?
 {% else %}
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
@@ -13,19 +16,23 @@ Sie sind bereits eingeloggt. <a href="/user/logout/">Ausloggen</a>?
 {% csrf_token %}
 <table>
 <tr>
-    <td>{{ form.username.label_tag }}</td>
+    <td>HRZ-Kennung&nbsp;</td>
     <td>{{ form.username }}</td>
 </tr>
 <tr>
     <td>{{ form.password.label_tag }}</td>
     <td>{{ form.password }}</td>
 </tr>
+<tr>
+    <td></td>
+    <td><input type="submit" value="Login" /> </td>
+</tr>
 </table>
 
-<input type="submit" value="Login" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
 
 {% endif %}
 
+    </div>
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block heading %}{% endblock %}
+
+{% block content %}
+    <div class="block">
+        <p>Webseite des FSR6: Fachschaft des Fachbereichs VI<br/>
+        Beuth Hochschule für Technik Berlin</p>
+    </div>
+    <div class="block" style="text-align:left;">
+        <ul>
+            <li><a href="/status.html">Status</a> 
+                <sup>(<a href="/status.xml">xml</a>,
+                <a href="/status.json">json</a>)</sup>
+                </li>
+            <li><a href="/lernhilfen/">Lernhilfen</a></li>
+            <li><a href="/redmine/">INI-Mine</a> <sup><a href="http://de.wikipedia.org/wiki/Redmine">?</a></sup>
+                <ul>
+                    <li><a href="/redmine/projects/fsropen/news">News</a></li>
+                    <li><a href="/redmine/projects/fsropen/wiki">Wiki</a></li>
+                </ul>
+            </ul>
+    </div>
+{% endblock %}

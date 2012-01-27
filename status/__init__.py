@@ -12,5 +12,3 @@ def get_all():
         sock.close()
     return json.loads(received)
 
-def ist_offen():
-    return get_all()['tuer_offen']
