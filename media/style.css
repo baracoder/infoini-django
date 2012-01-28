@@ -34,7 +34,7 @@ a {color:#028999;text-decoration:none;border-bottom:1px #fff dashed;}
 sup{font-size:0.7em;}
 
 .frame { margin-right:auto;margin-left:auto; max-width:800px;margin-bottom:3em; }
-.login { float:right;position:relative;top:-3.5em; text-align:right;font-size:0.6em;}
+.login { text-align:right;font-size:0.6em;}
 
 /* lernhilfen --------------------------------------------------------- */
 .lernhilfen { font-size:0.8em;padding-left:0;padding-right:0;}
