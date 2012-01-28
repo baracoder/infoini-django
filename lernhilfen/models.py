@@ -38,12 +38,14 @@ class Art(AbstractHasPath):
     class Meta:
         verbose_name="Art"
         verbose_name_plural="Arten"
+        ordering = [ 'name' ]
     name = models.CharField(max_length=100)
 
 class Modul(AbstractHasPath):
     class Meta:
         verbose_name="Modul"
         verbose_name_plural="Module"
+        ordering = [ 'name' ]
     name = models.CharField(max_length=100)
 
 
@@ -51,6 +53,7 @@ class Studiengang(AbstractHasPath):
     class Meta:
         verbose_name="Studiengang"
         verbose_name_plural="Studiengänge"
+        ordering = [ 'name' ]
     name = models.CharField(max_length=100)
 
 # hilfsmethode
@@ -138,6 +141,7 @@ class Dozent(AbstractHasPath):
     class Meta:
         verbose_name="Dozent"
         verbose_name_plural="Dozenten"
+        ordering = [ 'nachname', 'vorname' ]
     nachname = models.CharField('Nachname',max_length=200)
     vorname  = models.CharField('Vorname',max_length=200)
 
@@ -149,6 +153,7 @@ class Semester(AbstractHasPath):
     class Meta:
         verbose_name="Semester"
         verbose_name_plural="Semester"
+        ordering = [ 'jahr', 'haelfte' ]
     HAELFTE_CHOISES=(
         ('ss','SS'),
         ('ws','WS')
