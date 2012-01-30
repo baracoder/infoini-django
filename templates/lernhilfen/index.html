@@ -11,54 +11,123 @@
         <a href="/lernhilfen/upload/">Lernhilfen hochladen</a>
 </div>
 
+<form action="./upload/" method="POST" enctype="multipart/form-data">
 <div class="lernhilfen block">
-<form action="." method="GET">
-<div class="filelist">
+    <div class="filelist" id="filelist">
         <div class="meta-head">
             <ul class="filter">
                 {{ filter.form.as_ul}}
             </ul>
             <div align="right" style="clear:both;">
                 {% if user.is_staff %}
-                <a href="/lernhilfen/?{{ q }}&ungesichtet=">nur ungesichtete anzeigen</a>
+                <input type="checkbox" name="ungesichtet" id="show_unreviewed"/> <label for="show_unreviewed">nur ungesichtete anzeigen</label>
                 {% endif %}
-                <input type="submit" value="suchen"/>
             </div>
         </div>
-{% autopaginate l %}
-{% for obj in l %}
-    <div class="filerow filerow{% cycle '1' '2' %}">
-        <div class="name" style="padding:2px;text-align:left;">
-            <a href="{{ obj.datei.url }}" target="_blank">{{ obj.name }}</a>
-            <sup>({{ obj.endung|cut:'.' }})</sup>
-            {% if user.is_staff %}
-            <div style="float:right;">
-                {% if not obj.gesichtet %}
-                <a href="/lernhilfen/sichten/{{obj.id}}/{{ q }}">
-                    <img src="/admin/media/img/admin/icon-yes.gif" alt="als gesichtet markieren"/>
-                </a>
-                {% endif %}
-                <a href="/admin/lernhilfen/lernhilfe/{{ obj.id }}/">
-                    <img src="/admin/media/img/admin/icon_changelink.gif" alt="Bearbeiten/Löschen" />
-                </a>
-            </div>
-            {% endif %}
-
-            <div style="clear:both;"></div>
-        </div>
-        <div class="meta">
-            <span>{{ obj.studiengang }}</span>
-            <span>{{ obj.modul }}</span>
-            <span>{{ obj.dozent }}</span>
-            <span>{{ obj.semester }}</span>
-            <span>{{ obj.art }}</span>
-            <div style="clear:both;"></div>
-        </div>
+        <div id="filerows"></div>
     </div>
-{% endfor %}
-{% paginate %}
 </div>
 
-</form>
+<div class="block">
+    <h2>Hochladen</h2>
+    <label for="id_name">Name</label> <input type="text" name="name" id="id_name" />
+    <label for="id_datei">Datei</label> <input id="id_datei" type="file" name="datei">
+    <input type="submit" value="hochladen"/>
 </div>
+{% csrf_token %}
+</form>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+{% if user.is_staff %}
+var user_is_staff = true;
+{% endif %}
+
+var file_row_cycle=1;
+function file_row(data) {
+    var row = '\
+    <div class="filerow filerow'+ (file_row_cycle++%2)  +'">\
+        <div class="name" style="padding:2px;text-align:left;">\
+            <a href="'+ data['datei'] +'" target="_blank">'+ data['name'] +'</a>\
+            <sup>('+ data['endung'].substring(1) +')</sup>';
+    if(user_is_staff) {
+        row += '\
+            <div style="float:right;">';
+        if(data['gesichtet']=="False") row += '\
+                <a href="#TODO">\
+                    <img src="/admin/media/img/admin/icon-yes.gif" alt="als gesichtet markieren"/>\
+                </a>';
+        row += '\
+                <a href="/admin/lernhilfen/lernhilfe/'+ data['id'] +'/">\
+                    <img src="/admin/media/img/admin/icon_changelink.gif" alt="Bearbeiten/Löschen" />\
+                </a>\
+            </div>';
+    }
+
+    row +='\
+            <div style="clear:both;"></div>\
+        </div>\
+        <div class="meta">\
+            <span>'+ data['studiengang'] +'</span>\
+            <span>'+ data['modul'] +'</span>\
+            <span>'+ data['dozent'] +'</span>\
+            <span>'+ data['semester'] +'</span>\
+            <span>'+ data['art'] +'</span>\
+            <div style="clear:both;"></div>\
+        </div>\
+    </div>\
+    ';
+    return row;
+}
+
+function get_filter_vals() {
+    filter =  {
+        'studiengang':$('#id_studiengang').val(),
+        'modul':$('#id_modul').val(),
+        'dozent':$('#id_dozent').val(),
+        'semester':$('#id_semester').val(),
+        'art':$('#id_art').val(),
+    };
+    if(user_is_staff && $('#show_unreviewed').attr('checked')) 
+        filter['ungesichtet']="";
+    return filter;
+}
+
+function parse_response(response) {
+    if(response['has_next']) $('#button_nextpage').show();
+    else $('#button_nextpage').hide();
+
+    if(response['has_prev']) $('#button_prevpage').show();
+    else $('#button_prevpage').hide();
+
+    var rows='';
+    for(var i in response['rows']) {
+        rows+=file_row(response['rows'][i]);
+    }
+
+    $('#filerows').html(rows);
+    // TODO: Ajax-loader background ausblenden
+}
+
+
+function request_filerows(offset) {
+    if(!offset) offset=0;
+    $.get( '/lernhilfen/get/',get_filter_vals(),parse_response );
+    // 2. suchanfrage stellen und anntwort-funktion als callback setzen
+    // 3. ajax-loader bild anzeigen
+}
+
+// Optional:
+// Hash-url auswerten
+
+// Ablauf beim laden der seite:
+// 1. Optional: hash auswerten
+// 2. suchanfrage stellen und anntwort-funktion als callback setzen
+// 3. ajax-loader bild anzeigen
+
+request_filerows();
+
+$('.filter select').change(request_filerows);
+$('#show_unreviewed').change(request_filerows);
+</script>
 {% endblock %}

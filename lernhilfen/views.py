@@ -9,12 +9,21 @@ from django.contrib import messages
 from django.core.files import File
 from django.conf import settings
 
+import json
 
 import os, random
 
 @csrf_protect
 @login_required
 def index(request):
+    filterset = forms.LernhilfenFilterSet()
+    c = {
+        'filter':filterset,
+        'q':request.GET.urlencode()
+    }
+    return render_response(request,'lernhilfen/index.html',c)
+
+def ajax_get(request):
     if request.GET and request.GET.has_key('semester'):
         filterset = forms.LernhilfenFilterSet(request.GET)
     else:
@@ -26,13 +35,22 @@ def index(request):
     if not request.user.is_staff:
         l = l.filter(gesichtet=True)
 
-    c = {
-        'filter':filterset,
-        'l':l,
-        'q':request.GET.urlencode()
-    }
-    c.update(csrf(request))
-    return render_response(request,'lernhilfen/index.html', c)
+
+    fields = [ 'id', 'name', 'endung', 'art', 'modul', 'dozent',
+                'studiengang', 'semester', 'gesichtet']
+    rows = []
+    for r in l:
+        row = {}
+        for f in fields:
+            row[f]=unicode(r.__getattribute__(f))
+            # datei braucht sonder bhandlung
+            row['datei'] = unicode(r.datei.url)
+        rows.append(row)
+    resp = {'has_prev':True,
+            'has_next':True,
+            'rows':rows,
+            }
+    return HttpResponse(json.dumps(resp), mimetype="application/json")
 
 @csrf_protect
 @login_required
