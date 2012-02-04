@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Lernhilfen einsortieren{% endblock %}
+{% block heading %}Lernhilfen einsortieren{% endblock %}
+
+{% block content %}
+<div class="block">
+    <p>Danke für deine Hilfe!</p>
+    <p>Du bekommst eine zufällige Datei aus dem alten Archiv präsentiert.
+    Bilder und PDFs werden direkt angezeigt, wenn dein Browser das unterstützt.
+    Archive müssen heruntergeladen werden. Wenn du damit nichts anfangen
+    kannst, wähle eine 
+                <a href="./">andere Datei</a></p>
+</div>
+
+<div class="lernhilfen block">
+
+    <form action="./" method="POST">
+        <iframe src="/{{ src }}#" style="width:100%;height:30em;"  name="vorschau"></iframe>
+        {% csrf_token %}
+        <input type="hidden" name="datei" value="{{ src }}" />
+        <div class="meta-head">
+            <ul class="filter">
+                {{ sort_form.as_ul}}
+            </ul>
+            <div align="right" style="clear:both;">
+            <input type="submit" value="speichern"/>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

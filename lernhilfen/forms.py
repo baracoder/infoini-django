@@ -14,3 +14,9 @@ class LernhilfenUpload(ModelForm):
         model = models.Lernhilfe
         exclude = ('gesichtet',)
 
+class LernhilfenSort(ModelForm):
+    class Meta:
+        model = models.Lernhilfe
+        exclude = ('gesichtet','datei',)
+
+
