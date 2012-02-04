@@ -15,7 +15,7 @@
 <div class="lernhilfen block">
 
     <form action="./" method="POST">
-        <iframe src="/{{ src }}#" style="width:100%;height:30em;"  name="vorschau"></iframe>
+        <iframe src="/media/{{ src }}#" style="width:100%;height:30em;"  name="vorschau"></iframe>
         {% csrf_token %}
         <input type="hidden" name="datei" value="{{ src }}" />
         <div class="meta-head">

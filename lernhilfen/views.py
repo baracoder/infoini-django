@@ -7,6 +7,8 @@ from infoini.shortcuts import render_response
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.contrib import messages
 from django.core.files import File
+from django.conf import settings
+
 
 import os, random
 
@@ -55,7 +57,7 @@ def sort(request):
     try:
         randomfile = get_random_file(basepath)
     except IndexError:
-       return HttpResponse("keine unsortierten dateien gefunden",status=404)
+       return HttpResponse("keine unsortierten dateien gefunden",status=500)
 
 
     sort_form = forms.LernhilfenSort(request.POST or None)
@@ -66,6 +68,8 @@ def sort(request):
         if '..' in filename or filename.startswith('/'):
             return HttpResponse(status=403)
 
+        filename = os.path.join(settings.MEDIA_ROOT,filename)
+
         l.datei.save(models.get_full_path(l,filename),File(open(filename)))
         l.gesichtet=True
         l.save()
@@ -73,9 +77,11 @@ def sort(request):
         messages.success(request,'Lernhilfe gespeichert')
         return HttpResponseRedirect('/lernhilfen/sort/')
 
+    randomfile_url = os.path.relpath(randomfile,settings.MEDIA_ROOT)
+
     c = {
         'sort_form':sort_form,
-        'src':randomfile,
+        'src':randomfile_url,
     }
     c.update(csrf(request))
     return render_response(request,'lernhilfen/sort.html', c)
