@@ -50,8 +50,13 @@ def upload(request):
 @csrf_protect
 @login_required
 def sort(request):
-    basepath = 'media/lernhilfen_archiv'
-    randomfile = get_random_file(basepath)
+    basepath =  os.path.join(settings.MEDIA_ROOT,'lernhilfen_archiv')
+
+    try:
+        randomfile = get_random_file(basepath)
+    except IndexError:
+       return HttpResponse("keine unsortierten dateien gefunden",status=404)
+
 
     sort_form = forms.LernhilfenSort(request.POST or None)
     if request.POST and sort_form.is_valid():
