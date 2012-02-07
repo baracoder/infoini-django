@@ -54,10 +54,14 @@ def upload(request):
 def sort(request):
     basepath =  os.path.join(settings.MEDIA_ROOT,'lernhilfen_archiv')
 
-    try:
-        randomfile = get_random_file(basepath)
-    except IndexError:
-       return HttpResponse("keine unsortierten dateien gefunden",status=500)
+    if request.POST.has_key('datei'):
+        randomfile_url = request.POST['datei']
+    else:
+        try:
+            randomfile = get_random_file(basepath)
+            randomfile_url = os.path.relpath(randomfile,settings.MEDIA_ROOT)
+        except IndexError:
+           return HttpResponse("keine unsortierten dateien gefunden",status=500)
 
 
     sort_form = forms.LernhilfenSort(request.POST or None)
@@ -77,7 +81,6 @@ def sort(request):
         messages.success(request,'Lernhilfe gespeichert')
         return HttpResponseRedirect('/lernhilfen/sort/')
 
-    randomfile_url = os.path.relpath(randomfile,settings.MEDIA_ROOT)
 
     c = {
         'sort_form':sort_form,
