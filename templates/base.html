@@ -12,7 +12,7 @@
         <link rel="apple-touch-icon" href="/media/logo_32.png" sizes="32x32" />
         <link rel="apple-touch-icon" href="/media/logo.png" />
     </head>
-    <body>
+    <body style="{% block bodycss %}{% endblock %}">
     <div class="frame">
         <h1><a href="/"><img src="/media/logo_32.png"/>InfoINI</a> / {% block heading %}{% endblock %}</h1>
         {% if messages %}
