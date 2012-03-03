@@ -1,5 +1,6 @@
 # coding=utf-8
 import serial
+import re
 from time import sleep
 import SocketServer
 import threading
@@ -59,9 +60,9 @@ class TuerSensor(Sensor):
 
 class PotSensor(Sensor):
     """Benutzt Arduino Objekt"""
-    def __init__(self,name,arduino,index):
+    def __init__(self,name,parser,index):
         self._name = name
-        self._arduino = arduino
+        self._parser = parser
         self._index = index
 
         # TODO aus Datenbank lesen
@@ -77,45 +78,69 @@ class PotSensor(Sensor):
         return round( 100* (val-val_min) / (val_max-val_min) )
 
     def getData(self):
-        pods = self._arduino.getCoffepots()
+        pods = self._parser.getCoffepots()
         if len(pods)-1 < self._index:
             d = False
         else:
             d = pods[self._index]
-
-        if d == False:
-            return {'status':"keine Info", 'level':0}
-        if d < self._pot['val_min']:
-            return {'status':"nicht vorhanden", 'level':0}
-        if d > self._pot['val_max']:
-            return {'status':"keine Info", 'level':0}
-        if d >= self._pot['val_min']:
-            l=self._get_pot_level(d)
-            return {'status':"vorhanden", 'level':l}
+            
+        # kein Status oder mehr als Vollgewicht
+        if d == False or  d > self._pot['val_max']: 
+            return {'status':"Keine Info"}
+        
+        # weniger als Leergewicht
+        if d < self._pot['val_min']:        
+            return {'status':"Kanne fehlt"}
+        
+        l=self._get_pot_level(d)
+        return {'status':"vorhanden", 'level':l}
 
 
 #######################################################################
 ## Datenaufbereitung
 
-class Arduino(object):
+class ArduinoParser(object):
+    """
+    Parser für Werte, die vom Arduino empfangen werden
+    
+    die Methode parse(line) wird mit der empfangen Zeile aufgerufen,
+    Die Werte können anschließend über die getX Methoden gelesen werden
+    """
+    
     def __init__(self):
+        self._re = re.compile(
+                r"ACK pots:(?P<pots>(\[\d+,\d+,\d+\],?)+)"
+                +" tueroffen:(?P<tueroffen>1|0) stat:(?P<status>\d+)")
+        self._repot = re.compile (
+                r"\[(?P<nr>\d+),(?P<level>\d+),(?P<sd>\d+)\]")
+        self.parse("")
+    
+    def _parsePots(self,pots):
         self._cofepots = []
-        self._tueroffen = False
-        self._status = 0
-        # öffne schnittstelle
+        for match in self._repot.finditer(pots):
+            # convert to int
+            res = {k:int(v) for k, v in match.groupdict().iteritems()}
+            self._cofepots.append(res)
+            
 
-
-    def request_line(self):
-        # forde zeile an
-        # zeile auslesen
-        pass
-
-    def _parse(self,line):
-        # TODO
-        # parse zeile
-        # werte parsen
-        # bei fehler False, sonst true
-        return False
+    def parse(self,line):
+        """
+        Parst *line* und Stellt Werte zur Verfügung
+        
+        return: bei Erfolg True, sonst False
+        """
+        match = self._re.match(line)
+        if not match: 
+            self._cofepots = []
+            self._tueroffen = False
+            self._status = False
+            return False
+        
+        results = match.groupdict()
+        self._parsePots(results['pots'])
+        self._tueroffen = (results['tueroffen'] == "1")
+        self._status = int(results['status'])
+        return True
 
     def getCoffepots(self):
         return self._cofepots
@@ -135,23 +160,29 @@ class CafeServer(object):
 
     def __init__(self):
         """Erzeugt Sensoren und Quellen"""
-        self._arduino = Arduino()
+        self._parser = ArduinoParser()
         self._coffepots = [
-                           PotSensor("Pot-1",self._arduino,0), 
-                           PotSensor("Pot-2",self._arduino,1)]
+                           PotSensor("Pot-1",self._parser,0), 
+                           PotSensor("Pot-2",self._parser,1)]
         self._tuer = TuerSensor("Tür")
 
     def update(self):
         """Aktualisiert Werte und loggt ggf Fehler"""
-        if not self._arduino.request_line():
+        line = self.request_line()
+        if not self._parser.parse(line):
             # TODO fehler loggen
             pass
 
-    def _getPots(self):
+    def request_line(self):
+        # forde zeile an
+        # zeile auslesen
+        return ""
+
+    def getPots(self):
         return [p.getData() for p in self._coffepots]
 
     def getData(self):
-        return {'tuer_offen':self._tuer.ist_offen(), 'cafepots':self._getPots()}
+        return {'tuer_offen':self._tuer.ist_offen(), 'cafepots':self.getPots()}
 
 
     def getJson(self):
