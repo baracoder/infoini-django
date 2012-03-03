@@ -1,7 +1,8 @@
 # coding=utf-8
 import serial
+import sched
 import re
-from time import sleep
+import time
 import SocketServer
 import threading
 import json
@@ -184,14 +185,21 @@ class CafeServer(object):
         self._startSerial(port_arduino)
         self._startTCP()
         
+    def run(self):
+        """ Startet Scheduler """
+        self._schedluler = sched.scheduler(time.time, time.sleep)
+        self._schedluler.enter(360, 2, self.record,())
+        self._schedluler.enter(1,   1, self.update,())
+        self._schedluler.run()
 
     def update(self):
         """Aktualisiert Werte und loggt ggf Fehler"""
+        print "werte erfassen"
         line = self.request_line()
         if not self._parser.parse(line):
             print "Fehler"
             # TODO fehler loggen
-            pass
+        self._schedluler.enter(1,   1, self.update,())
 
     def request_line(self):
         try:
@@ -203,6 +211,9 @@ class CafeServer(object):
         except SerialTimeoutException:
             return ""
 
+    def record(self):
+        print "record"
+        self._schedluler.enter(360, 2, self.record,())
 
     def getPots(self):
         return [p.getData() for p in self._coffepots]
@@ -228,10 +239,7 @@ if __name__ == "__main__":
     cafeserver = CafeServer()
 
     try:
-        while True:
-            print "werte erfassen"
-            cafeserver.update()
-            sleep(1)
+        cafeserver.run()
     except KeyboardInterrupt:
         print "beenden..."
         cafeserver.shutdown()
