@@ -5,13 +5,11 @@ from time import sleep
 import SocketServer
 import threading
 import json
+from serial.serialutil import SerialTimeoutException
 
 #######################################################################
 ## TCP Kommunikation
 class TCPRequestHandler(SocketServer.BaseRequestHandler):
-    """
-    Sendet aktuelle Sensordaten im JSON Format
-    """
     def __init__(self, callback, *args, **keys):
         self.callback = callback
         SocketServer.BaseRequestHandler.__init__(self, *args, **keys)
@@ -31,14 +29,13 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 class Sensor(object):
     """Sensor mit Zwischenspeicher für letzten Wert"""
     _name = "Unbenannt"
-    _value = 0
 
     def __init__(self,name):
         self._name = name
 
     def getData(self):
         """gibt aktuelle Daten strukturiert zurück"""
-        return self._value
+        return None
 
     def update(self):
         """Aktualisiert Wert"""
@@ -82,7 +79,7 @@ class PotSensor(Sensor):
         if len(pods)-1 < self._index:
             d = False
         else:
-            d = pods[self._index]
+            d = pods[self._index]['level']
             
         # kein Status oder mehr als Vollgewicht
         if d == False or  d > self._pot['val_max']: 
@@ -93,7 +90,7 @@ class PotSensor(Sensor):
             return {'status':"Kanne fehlt"}
         
         l=self._get_pot_level(d)
-        return {'status':"vorhanden", 'level':l}
+        return {'status':"Vorhanden", 'level':l}
 
 
 #######################################################################
@@ -157,26 +154,52 @@ class ArduinoParser(object):
 
 class CafeServer(object):
     """Hauptklasse"""
+    
+    def _startSerial(self,port):
+        self._ser = serial.Serial(port=port,timeout=0.2,writeTimeout=0.2)
+        self._ser.open()
+        
 
-    def __init__(self):
+    def _startTCP(self):
+        ## TCP Server starten
+        # port CAFE, 51966
+        HOST, PORT = "localhost", 0xCAFE
+        self.server = ThreadedTCPServer((HOST, PORT), 
+                lambda *args, **keys: TCPRequestHandler(
+                cafeserver.getJson, *args, **keys))
+        self.server_thread = threading.Thread(target=self.server.serve_forever)
+        self.server_thread.daemon = True
+        self.server_thread.start()
+
+    def __init__(self,port):
         """Erzeugt Sensoren und Quellen"""
         self._parser = ArduinoParser()
         self._coffepots = [
                            PotSensor("Pot-1",self._parser,0), 
                            PotSensor("Pot-2",self._parser,1)]
         self._tuer = TuerSensor("Tür")
+        
+        self._startSerial(port)
+        self._startTCP()
 
     def update(self):
         """Aktualisiert Werte und loggt ggf Fehler"""
         line = self.request_line()
         if not self._parser.parse(line):
+            print "Fehler"
             # TODO fehler loggen
             pass
 
     def request_line(self):
-        # forde zeile an
-        # zeile auslesen
-        return ""
+        try:
+            self._ser.flushInput()
+            self._ser.flushOutput()
+            self._ser.write("GET\n")
+            line = self._ser.readline()
+            return line
+        except SerialTimeoutException:
+            return ""
+
 
     def getPots(self):
         return [p.getData() for p in self._coffepots]
@@ -188,23 +211,19 @@ class CafeServer(object):
     def getJson(self):
         return json.dumps(self.getData())
 
+    def shutdown(self):
+        self._ser.close()
+        self.server.shutdown()
+        self.server_thread.join()
+        
 
 
 #######################################################################
 ## Start
 if __name__ == "__main__":
 
-    cafeserver = CafeServer()
-
-    ## Server starten
-    # port CAFE, 51966
-    HOST, PORT = "localhost", 0xCAFE
-    #server = SensorThreadServer((HOST, PORT), SensorServerHandler(cafeserver))
-    server = ThreadedTCPServer((HOST, PORT), lambda *args, **keys: TCPRequestHandler(cafeserver.getJson, *args, **keys))
-    server_thread = threading.Thread(target=server.serve_forever)
-    server_thread.daemon = True
-    server_thread.start()
-
+    port = '/dev/pts/55'
+    cafeserver = CafeServer(port)
 
     try:
         while True:
@@ -212,7 +231,7 @@ if __name__ == "__main__":
             cafeserver.update()
             sleep(1)
     except KeyboardInterrupt:
-        server.shutdown()
-        server_thread.join()
+        print "beenden..."
+        cafeserver.shutdown()
 
 
