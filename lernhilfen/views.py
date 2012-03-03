@@ -46,8 +46,8 @@ def ajax_get(request):
             # datei braucht sonder bhandlung
             row['datei'] = unicode(r.datei.url)
         rows.append(row)
-    resp = {'has_prev':True,
-            'has_next':True,
+    resp = {'has_prev':False,
+            'has_next':False,
             'rows':rows,
             }
     return HttpResponse(json.dumps(resp), mimetype="application/json")

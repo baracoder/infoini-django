@@ -6,36 +6,80 @@
 
 {% block content %}
 <div class="login">{% include "login_box.html" %}</div>
-<div class="block">
-        <a href="/lernhilfen/sort/">Altes Archiv einsortieren</a> |
-        <a href="/lernhilfen/upload/">Lernhilfen hochladen</a>
-</div>
+
+<style>
+.upload_form {
+    text-align:left;
+    background-color:#080;
+    display:none;
+    border-bottom: 1px solid #222222;
+    border-top: 1px solid #222222;
+    clear:both;
+}
+
+#btn_prevpage, #btn_nextpage {
+    z-index:1;
+}
+
+#loader {
+    position:absolute;
+    top:0;left:0;
+    z-index:2;
+    background-color:#333;
+    height:100%;width:100%;
+}
+#loader div { margin-top:2em; }
+
+</style>
 
 <form action="./upload/" method="POST" enctype="multipart/form-data">
 <div class="lernhilfen block">
+    <div align="left">
+                <a href="#" id="btn_hochladen">Hochladen</a>
+                | <a href="/lernhilfen/sort/">Altes Archiv einsortieren</a>
+    </div>
     <div class="filelist" id="filelist">
         <div class="meta-head">
+            <div class="upload_form" id="ulform1">
+                <h2>Hochladen</h2>
+                <ol>
+                    <li>Einordnen</li>
+                </ol>
+            </div>
             <ul class="filter">
                 {{ filter.form.as_ul}}
             </ul>
-            <div align="right" style="clear:both;">
-                {% if user.is_staff %}
-                <input type="checkbox" name="ungesichtet" id="show_unreviewed"/> <label for="show_unreviewed">nur ungesichtete anzeigen</label>
-                {% endif %}
+            <div class="upload_form" id="ulform2">
+                <ol start="2">
+                    <li>Datei auswählen<br/>
+                        <input id="id_datei" type="file" name="datei"></li>
+                    <li>Einen Namen eingeben<br/>
+                        <input type="text" name="name" id="id_name" /></li>
+                    <li><input type="submit" value="hochladen"/></li>
+                </ol>
             </div>
+            {% csrf_token %}
+
+            {% if user.is_staff %}
+            <div align="right" style="clear:both;">
+                <input type="checkbox" name="ungesichtet" id="show_unreviewed"/> <label for="show_unreviewed">nur ungesichtete anzeigen</label>
+            </div>
+            {% endif %}
         </div>
-        <div id="filerows"></div>
+        <div style="position:relative;">
+            <div id="loader">
+                <div>
+                Lade...
+                </div>
+            </div>
+            <div id="btn_prevpage">Hasprev</div>
+            <div id="filerows" style="position:relative;z-index:1;"></div>
+            <div id="btn_nextpage">Hasnext</div>
+        </div>
     </div>
 </div>
-
-<div class="block">
-    <h2>Hochladen</h2>
-    <label for="id_name">Name</label> <input type="text" name="name" id="id_name" />
-    <label for="id_datei">Datei</label> <input id="id_datei" type="file" name="datei">
-    <input type="submit" value="hochladen"/>
-</div>
-{% csrf_token %}
 </form>
+
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -43,10 +87,21 @@
 var user_is_staff = true;
 {% endif %}
 
-var file_row_cycle=1;
-function file_row(data) {
+function file_rows(rows) {
+    var file_row_cycle=2;
+    var strr='';
+    for(var i in rows) {
+        strr+=file_row(rows[i],file_row_cycle++%2+1);
+    }
+    $('#filerows').html(strr);
+    //$('#filerows').fadeIn();
+    // TODO: Ajax-loader background ausblenden
+    $('#loader').hide();
+}
+
+function file_row(data,rownr) {
     var row = '\
-    <div class="filerow filerow'+ (file_row_cycle++%2)  +'">\
+    <div class="filerow filerow'+ rownr +'">\
         <div class="name" style="padding:2px;text-align:left;">\
             <a href="'+ data['datei'] +'" target="_blank">'+ data['name'] +'</a>\
             <sup>('+ data['endung'].substring(1) +')</sup>';
@@ -95,18 +150,13 @@ function get_filter_vals() {
 
 function parse_response(response) {
     if(response['has_next']) $('#button_nextpage').show();
-    else $('#button_nextpage').hide();
+    else $('#btn_nextpage').hide();
 
     if(response['has_prev']) $('#button_prevpage').show();
-    else $('#button_prevpage').hide();
+    else $('#btn_prevpage').hide();
 
-    var rows='';
-    for(var i in response['rows']) {
-        rows+=file_row(response['rows'][i]);
-    }
+    file_rows(response['rows'])
 
-    $('#filerows').html(rows);
-    // TODO: Ajax-loader background ausblenden
 }
 
 
@@ -115,6 +165,8 @@ function request_filerows(offset) {
     $.get( '/lernhilfen/get/',get_filter_vals(),parse_response );
     // 2. suchanfrage stellen und anntwort-funktion als callback setzen
     // 3. ajax-loader bild anzeigen
+    $('#loader').fadeIn();
+    //$('#filerows').hide();
 }
 
 // Optional:
@@ -129,5 +181,14 @@ request_filerows();
 
 $('.filter select').change(request_filerows);
 $('#show_unreviewed').change(request_filerows);
+
+$('#btn_hochladen').click(
+function() {
+    $('#ulform1').fadeIn(500)
+    $('#ulform2').delay(300).fadeIn(500)
+    return false;
+}
+);
+
 </script>
 {% endblock %}
