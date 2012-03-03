@@ -7,12 +7,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^status/$', 'status.views.status_xml'),
-    (r'^status.xml$', 'status.views.status_xml'),
-    (r'^status.html$', 'status.views.status_html'),
-    (r'^status.json$', 'status.views.status_json'),
     (r'^$', direct_to_template, {'template': 'index.html'}),
     (r'^lernhilfen/', include('lernhilfen.urls')),
+    (r'^', include('cafe_server.urls')),
 
     # Benutzerlogin/logout
     (r'^user/login/$', 'django.contrib.auth.views.login', {'template_name': 'user/login.html'}),
