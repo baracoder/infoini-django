@@ -48,8 +48,8 @@ class Sensor(object):
 class TuerSensor(Sensor):
     """Benutzt CTS und RTS Pin am Serielanschluss"""
 
-    def __init__(self,name):
-        self._s = serial.Serial( port="/dev/ttyS0")
+    def __init__(self,port):
+        self._s = serial.Serial( port=port)
         self._s.setRTS()
 
     def ist_offen(self):
@@ -57,21 +57,16 @@ class TuerSensor(Sensor):
 
 class PotSensor(Sensor):
     """Benutzt Arduino Objekt"""
-    def __init__(self,name,parser,index):
-        self._name = name
+    def __init__(self,parser,index,minval,maxval):
         self._parser = parser
         self._index = index
+        self._min = minval
+        self._max = maxval
 
-        # TODO aus Datenbank lesen
-        pots = [
-            {'val_min':552,'val_max':600},
-            {'val_min':0,'val_max':600},
-        ]
-        self._pot = pots[index]
 
     def _get_pot_level(self,val):
-        val_min = self._pot['val_min']
-        val_max = self._pot['val_max']
+        val_min = self._min
+        val_max = self._max
         return round( 100* (val-val_min) / (val_max-val_min) )
 
     def getData(self):
@@ -82,11 +77,11 @@ class PotSensor(Sensor):
             d = pods[self._index]['level']
             
         # kein Status oder mehr als Vollgewicht
-        if d == False or  d > self._pot['val_max']: 
+        if d == False or  d > self._max: 
             return {'status':"Keine Info"}
         
         # weniger als Leergewicht
-        if d < self._pot['val_min']:        
+        if d < self._min:        
             return {'status':"Kanne fehlt"}
         
         l=self._get_pot_level(d)
@@ -171,16 +166,24 @@ class CafeServer(object):
         self.server_thread.daemon = True
         self.server_thread.start()
 
-    def __init__(self,port):
+    def __init__(self):
         """Erzeugt Sensoren und Quellen"""
+        
+        # TODO min,max für kannen aus datenbank lesen
+        # TODO: minmax auf arduino prüfen, ggf ändern
+        port_arduino = '/dev/pts/55'
+        port_tuer    = "/dev/ttyS0"
+        
+        
         self._parser = ArduinoParser()
         self._coffepots = [
-                           PotSensor("Pot-1",self._parser,0), 
-                           PotSensor("Pot-2",self._parser,1)]
-        self._tuer = TuerSensor("Tür")
+               PotSensor(parser=self._parser,index=0,minval=552,maxval=600), 
+               PotSensor(parser=self._parser,index=1,minval=0  ,maxval=600)]
+        self._tuer = TuerSensor(port=port_tuer)
         
-        self._startSerial(port)
+        self._startSerial(port_arduino)
         self._startTCP()
+        
 
     def update(self):
         """Aktualisiert Werte und loggt ggf Fehler"""
@@ -222,8 +225,7 @@ class CafeServer(object):
 ## Start
 if __name__ == "__main__":
 
-    port = '/dev/pts/55'
-    cafeserver = CafeServer(port)
+    cafeserver = CafeServer()
 
     try:
         while True:
