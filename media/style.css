@@ -59,3 +59,31 @@ option { background-color:#333;}
 input[type="submit"] { background-color:#028999;}
 
 
+/* cafe-status -------------------------------------------------------- */
+.progress_bar {
+  position: relative;
+  margin: 0 0 15px 0;
+  border: 1px solid #111;
+  background: #511;
+  box-shadow: 0 0.1em 0.5em #000 inset;
+  border-radius:0.5em;
+  overflow:hidden;
+}
+ 
+.progress_bar span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  line-height: 1.8em;
+  background-color: #530;
+  box-shadow: 0 0.5em 1.0em #860 inset;
+  border-right:1px solid #000;
+}
+ 
+.progress_bar strong {
+  position: relative;
+  z-index: 10;
+  display: block;
+  line-height: 1.8em;
+  text-align: center;
+}
