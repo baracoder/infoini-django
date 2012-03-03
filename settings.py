@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'status',
+    'cafe_server',
     'lernhilfen',
     'django_filters',
     'django.contrib.markup',
