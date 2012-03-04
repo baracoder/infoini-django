@@ -24,6 +24,7 @@
 #loader {
     position:absolute;
     top:0;left:0;
+    opacity:0.9;
     z-index:2;
     background-color:#333;
     height:100%;width:100%;
@@ -85,6 +86,8 @@
 <script type="text/javascript">
 {% if user.is_staff %}
 var user_is_staff = true;
+{% else %}
+var user_is_staff = false;
 {% endif %}
 
 function file_rows(rows) {
@@ -101,7 +104,7 @@ function file_rows(rows) {
 
 function file_row(data,rownr) {
     var row = '\
-    <div class="filerow filerow'+ rownr +'">\
+    <div class="filerow filerow'+ rownr +'" id="filerow-'+data['id']+'">\
         <div class="name" style="padding:2px;text-align:left;">\
             <a href="'+ data['datei'] +'" target="_blank">'+ data['name'] +'</a>\
             <sup>('+ data['endung'].substring(1) +')</sup>';
@@ -109,7 +112,7 @@ function file_row(data,rownr) {
         row += '\
             <div style="float:right;">';
         if(data['gesichtet']=="False") row += '\
-                <a href="#TODO">\
+                <a href="javascript:review('+data['id']+');">\
                     <img src="/admin/media/img/admin/icon-yes.gif" alt="als gesichtet markieren"/>\
                 </a>';
         row += '\
@@ -169,6 +172,15 @@ function request_filerows(offset) {
     //$('#filerows').hide();
 }
 
+function review(id) {
+    $('#filerow-'+id).css({'background-color':'#080'});
+    $.get( '/lernhilfen/sichten/'+id,review_callback);
+}
+
+function review_callback() {
+    request_filerows();
+}
+
 // Optional:
 // Hash-url auswerten
 
@@ -184,8 +196,8 @@ $('#show_unreviewed').change(request_filerows);
 
 $('#btn_hochladen').click(
 function() {
-    $('#ulform1').fadeIn(500)
-    $('#ulform2').delay(300).fadeIn(500)
+    $('#ulform1').fadeToggle(500)
+    $('#ulform2').delay(300).fadeToggle(500)
     return false;
 }
 );
