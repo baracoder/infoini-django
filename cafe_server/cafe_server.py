@@ -8,8 +8,7 @@ import threading
 import json
 from serial.serialutil import SerialTimeoutException
 
-#######################################################################
-## TCP Kommunikation
+####################################################################### ## TCP Kommunikation
 class TCPRequestHandler(SocketServer.BaseRequestHandler):
     def __init__(self, callback, *args, **keys):
         self.callback = callback
@@ -112,7 +111,9 @@ class ArduinoParser(object):
         self._cofepots = []
         for match in self._repot.finditer(pots):
             # convert to int
-            res = {k:int(v) for k, v in match.groupdict().iteritems()}
+            #only python >=2.7
+            #res = {k:int(v) for k, v in match.groupdict().iteritems()}
+            res =  dict((k,int(v)) for k,v in match.groupdict().iteritems())
             self._cofepots.append(res)
             
 
