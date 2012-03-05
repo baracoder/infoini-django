@@ -6,7 +6,12 @@ import time
 import SocketServer
 import threading
 import json
-from serial.serialutil import SerialTimeoutException
+from serial.serialutil import SerialTimeoutException, SerialException
+import os
+from optparse import OptionParser
+
+
+from django.conf import settings
 
 ####################################################################### ## TCP Kommunikation
 class TCPRequestHandler(SocketServer.BaseRequestHandler):
@@ -152,10 +157,6 @@ class ArduinoParser(object):
 class CafeServer(object):
     """Hauptklasse"""
     
-    def _startSerial(self,port):
-        self._ser = serial.Serial(port=port,timeout=0.2,writeTimeout=0.2)
-        self._ser.open()
-        
 
     def _startTCP(self):
         ## TCP Server starten
@@ -173,9 +174,12 @@ class CafeServer(object):
         
         # TODO min,max für kannen aus datenbank lesen
         # TODO: minmax auf arduino prüfen, ggf ändern
-        port_arduino = '/dev/pts/55'
-        port_tuer    = "/dev/ttyS0"
         
+        # ports aus settings lesen
+        port_arduino = settings.PORT_ARDUINO
+        port_tuer    = settings.PORT_TUER
+        
+        self._port_arduino = port_arduino
         
         self._parser = ArduinoParser()
         self._coffepots = [
@@ -183,8 +187,8 @@ class CafeServer(object):
                PotSensor(parser=self._parser,index=1,minval=0  ,maxval=600)]
         self._tuer = TuerSensor(port=port_tuer)
         
-        self._startSerial(port_arduino)
         self._startTCP()
+        self._ser = None
         
     def run(self):
         """ Startet Scheduler """
@@ -193,14 +197,31 @@ class CafeServer(object):
         self._schedluler.enter(1,   1, self.update,())
         self._schedluler.run()
 
+
+    def _startSer(self):
+        if not self._ser or not self._ser.isOpen():
+            self._ser = serial.Serial(
+                    port=self._port_arduino,timeout=0.2,writeTimeout=0.2)
+            self._ser.open()
+
     def update(self):
         """Aktualisiert Werte und loggt ggf Fehler"""
+        # sheduler aktualisieren
+        self._schedluler.enter(1,   1, self.update,())
+        
+        try:
+            print "versuche Ser zu initialisieren..."
+            self._startSer()
+        except SerialException:
+            print "Fehler beim initialisieren der Ser Schnittstelle"
+            self._parser.parse("")
+            return
+        
         print "werte erfassen"
         line = self.request_line()
         if not self._parser.parse(line):
             print "Fehler"
             # TODO fehler loggen
-        self._schedluler.enter(1,   1, self.update,())
 
     def request_line(self):
         try:
@@ -213,15 +234,16 @@ class CafeServer(object):
             return ""
 
     def record(self):
-        print "record"
+        """Loggen der Sensorwerte in der Datenbank"""
         self._schedluler.enter(360, 2, self.record,())
+        # TODO
+        print "record"
 
     def getPots(self):
         return [p.getData() for p in self._coffepots]
 
     def getData(self):
         return {'tuer_offen':self._tuer.ist_offen(), 'cafepots':self.getPots()}
-
 
     def getJson(self):
         return json.dumps(self.getData())
@@ -236,6 +258,18 @@ class CafeServer(object):
 #######################################################################
 ## Start
 if __name__ == "__main__":
+    
+    usage = "usage: %prog -s SETTINGS | --settings=SETTINGS"
+    parser = OptionParser(usage)
+    parser.add_option('-s', '--settings', dest='settings', metavar='SETTINGS',
+                  help="The Django settings module to use")
+    (options, args) = parser.parse_args()
+    
+    if not options.settings:
+        parser.error("You must specify a settings module")
+    
+    os.environ['DJANGO_SETTINGS_MODULE'] = options.settings
+
 
     cafeserver = CafeServer()
 
@@ -244,5 +278,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print "beenden..."
         cafeserver.shutdown()
-
 

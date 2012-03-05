@@ -133,6 +133,9 @@ CACHES = {
     }
 }
 
+PORT_ARDUINO  = '/dev/ttyUSB0'
+PORT_TUER = '/dev/ttyS0'
+
 
 # OVERWRITE WITH LOCAL SETTINGS
 try:
