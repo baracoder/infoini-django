@@ -15,14 +15,14 @@
         <h2>0xCAFE</h2>
         {% for pot in cafepots %}
         <div class="pot">
-            <p style="text-align:left;">Kanne {{ forloop.counter }}: {{ pot.status }}</p>
-
-            {% if pot.level %}
             <div class="progress_bar">
+                {% if pot.level %}
                 <strong>{{ pot.level|floatformat:"0" }}%</strong>
                 <span style="width: {{ pot.level|floatformat:"0" }}%;">&nbsp;</span>
+                {% else %}
+                <strong>{{ pot.status }}</strong>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
         {% endfor %}
     </div>
