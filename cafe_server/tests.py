@@ -21,15 +21,13 @@ class TestParser(TestCase):
     def test_parser_normal(self):
         """Normale Zeile"""
         self.assertTrue(self.parser.parse(
-                "ACK pots:[0,809,234],[1,2345,345] tueroffen:1 stat:200"),
+                "ACK pots:[809,234],[2345,345] tueroffen:1 stat:200"),
                  "Normale Zeile")
         
         self.assertEqual(self.parser.getTueroffen(), True, "tueroffen")
         self.assertEqual(self.parser.getStatus(), 200, "status")
         
         [pot1, pot2] = self.parser.getCoffepots()
-        self.assertEqual(pot1['nr'], 0, "potnr")
-        self.assertEqual(pot2['nr'], 1, "potnr")
         self.assertEqual(pot1['level'], 809, "level")
         self.assertEqual(pot2['level'], 2345, "level")
         self.assertEqual(pot1['sd'], 234, "sd")

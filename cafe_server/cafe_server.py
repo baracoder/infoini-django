@@ -75,21 +75,27 @@ class PotSensor(Sensor):
         return round( 100* (val-val_min) / (val_max-val_min) )
 
     def getData(self):
-        pods = self._parser.getCoffepots()
-        if len(pods)-1 < self._index:
-            d = False
+        pots = self._parser.getCoffepots()
+        if len(pots)-1 < self._index:
+            return {'status':"Keine Info"}
         else:
-            d = pods[self._index]['level']
+            d = pots[self._index]['level']
             
-        # kein Status oder mehr als Vollgewicht
-        if d == False or  d > self._max: 
+        # mehr als Vollgewicht
+        if d > self._max:
             return {'status':"Keine Info"}
         
         # weniger als Leergewicht
-        if d < self._min:        
+        if d < self._min:
             return {'status':"Kanne fehlt"}
+
         
         l=self._get_pot_level(d)
+
+        # leer
+        if l <1.0:
+            return {'status':"Leer","level": 0}
+
         return {'status':"Vorhanden", 'level':l}
 
 
@@ -106,10 +112,10 @@ class ArduinoParser(object):
     
     def __init__(self):
         self._re = re.compile(
-                r"ACK pots:(?P<pots>(\[\d+,\d+,\d+\],?)+)"
+                r".*ACK pots:(?P<pots>(\[\d+,\d+\],?)+)"
                 +" tueroffen:(?P<tueroffen>1|0) stat:(?P<status>\d+)")
         self._repot = re.compile (
-                r"\[(?P<nr>\d+),(?P<level>\d+),(?P<sd>\d+)\]")
+                r"\[(?P<level>\d+),(?P<sd>\d+)\]")
         self.parse("")
     
     def _parsePots(self,pots):
@@ -129,16 +135,19 @@ class ArduinoParser(object):
         return: bei Erfolg True, sonst False
         """
         match = self._re.match(line)
+        print "parse" , line
         if not match: 
             self._cofepots = []
             self._tueroffen = False
             self._status = False
+            print "parsen fehlgeschlagen"
             return False
         
         results = match.groupdict()
         self._parsePots(results['pots'])
         self._tueroffen = (results['tueroffen'] == "1")
         self._status = int(results['status'])
+        print "parsen erfolgreich"
         return True
 
     def getCoffepots(self):
@@ -183,8 +192,8 @@ class CafeServer(object):
         
         self._parser = ArduinoParser()
         self._coffepots = [
-               PotSensor(parser=self._parser,index=0,minval=552,maxval=600), 
-               PotSensor(parser=self._parser,index=1,minval=0  ,maxval=600)]
+               PotSensor(parser=self._parser,index=0,minval=0,maxval=1200),
+               PotSensor(parser=self._parser,index=1,minval=0,maxval=1200)]
         self._tuer = TuerSensor(port=port_tuer)
         
         self._startTCP()
@@ -200,6 +209,7 @@ class CafeServer(object):
 
     def _startSer(self):
         if not self._ser or not self._ser.isOpen():
+            print "versuche Ser zu initialisieren..."
             self._ser = serial.Serial(
                     port=self._port_arduino,timeout=0.2,writeTimeout=0.2)
             self._ser.open()
@@ -210,7 +220,6 @@ class CafeServer(object):
         self._schedluler.enter(1,   1, self.update,())
         
         try:
-            print "versuche Ser zu initialisieren..."
             self._startSer()
         except SerialException:
             print "Fehler beim initialisieren der Ser Schnittstelle"
@@ -227,11 +236,15 @@ class CafeServer(object):
         try:
             self._ser.flushInput()
             self._ser.flushOutput()
-            self._ser.write("GET\n")
+            self._ser.write("{GET}")
             line = self._ser.readline()
+            print "GET returned:", line
             return line
-        except SerialTimeoutException:
+        except SerialException:
             return ""
+        # TODO     termios.tcflush(self.fd, TERMIOS.TCIFLUSH)
+        # termios.error: (5, 'Input/output error')
+
 
     def record(self):
         """Loggen der Sensorwerte in der Datenbank"""
