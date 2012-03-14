@@ -87,3 +87,63 @@ input[type="submit"] { background-color:#028999;}
   line-height: 1.8em;
   text-align: center;
 }
+
+/* index-feeds -------------------------------------------------------- */
+.feedblock {
+    margin:0;padding:0;
+    padding-bottom:1em;
+}
+#feed_links {
+    border-bottom:1px solid #000;
+}
+#feed_links a.selected {
+    background-color:#444;
+}
+
+.rssFeed {
+    font-size: 90%;
+    text-align:left;
+}
+.rssHeader {
+    padding: 1.2em 0;
+    border-bottom:1px solid #000;
+    font-size:1.2em;
+}
+.rssBody {
+}
+.rssBody ul {
+    list-style: none outside none;
+}
+.rssBody ul, .rssRow, .rssRow h4, .rssRow p {
+    margin: 0;
+    padding: 0;
+}
+.rssRow {
+    padding: 0.8em;
+    border-bottom:1px solid #000;
+}
+.rssRow:hover {
+    background-color: #111;
+    cursor:pointer;
+}
+.rssRow h4 {
+    font-size: 1.1em;
+    float:left;
+}
+.rssRow div {
+    float:right;
+    color: #eee;
+    font-size: 90%;
+    margin: 0.2em 0 0.4em;
+}
+.rssRow p {
+    clear:both;
+}
+.rssRow.odd { background-color: #444; }
+.rssRow.even { background-color: #333; }
+.rssRow .rssMedia {
+    font-size: 1em;
+    padding: 0.5em;
+}
+
+

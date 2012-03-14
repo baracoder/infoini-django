@@ -23,4 +23,56 @@
                 </ul>
             </ul>
     </div>
+
+    <div class="block feedblock">
+        <h2>Aktuelles</h2>
+        <div id="feed_links">
+            <a href="http://infoini.de/redmine/projects/fsropen/news"
+                rss="http://infoini.de/redmine/projects/fsropen/news.atom">News</a>
+            |
+            <a href="http://twitter.com/InfoINI"
+                rss="http://twitter.com/statuses/user_timeline/infoini.rss">Twitter</a>
+            |
+            <a href="http://infoini.de/redmine/activity?show_changesets=1&show_documents=1&show_files=1&show_issues=1&show_messages=1&show_news=1&show_time_entries=1&show_wiki_edits=1"
+                rss="http://infoini.de/redmine/activity.atom?show_changesets=1&show_documents=1&show_files=1&show_issues=1&show_messages=1&show_news=1&show_time_entries=1&show_wiki_edits=1">INI-Mine Aktivität</a>
+        </div>
+        <div id="feed"></div>
+    </div>
+
+<script type="text/javascript" src="/media/jquery.zrssfeed.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('#feed_links a').click(function() {
+            setRSSFeed(this);
+            $('#feed_links a').removeClass("selected");
+            $(this).addClass("selected");
+            return false;
+    });
+
+    function mklink(e) {
+        $('#feed .rssBody .rssRow').click(function() {
+                var href=$("a",this).attr('href');
+                window.location.href = href;
+                return false;
+        });
+    }
+
+    function setRSSFeed(obj) {
+            var feedurl = $(obj).attr('rss');
+            if (feedurl) {
+                    $('#feed').rssfeed(feedurl,
+                        {
+                            limit:5,
+                            header:false,
+                        },
+                        mklink
+                    );
+            }
+    }
+
+    $('#feed_links a:first').click();
+});
+</script>
+
 {% endblock %}
