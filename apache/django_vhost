@@ -36,6 +36,23 @@
         Allow from all
     </Directory>
 
+    # Statistiken
+    Alias /awstats-icon/ /usr/share/awstats/icon/
+    <Directory /usr/share/awstats/icon>
+      Options None
+      AllowOverride None
+      Order allow,deny
+      Allow from all
+    </Directory>
+
+    ScriptAlias        /cgi-bin/  "/var/www/cgi-bin/"
+    <Directory "/var/www/cgi-bin">
+         AllowOverride      None
+         Options            None
+         Order              allow,deny
+         Allow              from all
+    </Directory>
+
     # Statische Daten Admin
     Alias /admin/media/ /usr/share/pyshared/django/contrib/admin/media/
     <Directory /usr/share/pyshared/django/contrib/admin/media>
