@@ -27,36 +27,38 @@ set -e
 
 case "$1" in
   start)
-	echo -n "Starting $DESC: "
-	start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
-	-u $RUN_AS_USER -b -d /local/infoini_dg/infoini/ --exec $DAEMON -- $DAEMON_OPTS
-	echo "$NAME."
-	;;
+    cd /local/infoini_dg/infoini/
+    export PYTYHONPATH="$PYTYHONPATH:."
+    echo -n "Starting $DESC: "
+    start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
+    -u $RUN_AS_USER -b -d /local/infoini_dg/infoini/ --exec $DAEMON -- $DAEMON_OPTS
+    echo "$NAME."
+    ;;
   stop)
-	echo -n "Stopping $DESC: "
-	start-stop-daemon --stop --oknodo --quiet --pidfile /var/run/$NAME.pid \
-		--exec $DAEMON
-	echo "$NAME."
-	;;
+    echo -n "Stopping $DESC: "
+    start-stop-daemon --stop --oknodo --quiet --pidfile /var/run/$NAME.pid \
+            --exec $DAEMON
+    echo "$NAME."
+    ;;
   force-reload)
-	# check whether $DAEMON is running. If so, restart
-	start-stop-daemon --stop --test --quiet --pidfile \
-		/var/run/$NAME.pid --exec $DAEMON \
-	&& $0 restart \
-	|| exit 0
-	;;
+    # check whether $DAEMON is running. If so, restart
+    start-stop-daemon --stop --test --quiet --pidfile \
+            /var/run/$NAME.pid --exec $DAEMON \
+    && $0 restart \
+    || exit 0
+    ;;
   restart)
-	echo -n "Restarting $DESC: "
-	start-stop-daemon --stop --oknodo --quiet --pidfile \
-		/var/run/$NAME.pid --exec $DAEMON
-	sleep 1
-	start-stop-daemon --start --quiet --pidfile \
-		/var/run/$NAME.pid --exec $DAEMON -- $DAEMON_OPTS
-	echo "$NAME."
-	;;
+    echo -n "Restarting $DESC: "
+    start-stop-daemon --stop --oknodo --quiet --pidfile \
+        /var/run/$NAME.pid --exec $DAEMON
+    sleep 1
+    start-stop-daemon --start --quiet --pidfile \
+        /var/run/$NAME.pid --exec $DAEMON -- $DAEMON_OPTS
+    echo "$NAME."
+    ;;
   status)
-	if [ -s /var/run/$NAME.pid ]; then
-            RUNNING=$(cat /var/run/$NAME.pid)
+    if [ -s /var/run/$NAME.pid ]; then
+        RUNNING=$(cat /var/run/$NAME.pid)
             if [ -d /proc/$RUNNING ]; then
                 if [ $(readlink /proc/$RUNNING/exe) = $DAEMON ]; then
                     echo "$NAME is running."
@@ -73,12 +75,12 @@ case "$1" in
             echo "$NAME not running."
             exit 1
         fi
-	;;
+    ;;
   *)
-	N=/etc/init.d/$NAME
-	echo "Usage: $N {start|stop|restart|force-reload}" >&2
-	exit 1
-	;;
+    N=/etc/init.d/$NAME
+    echo "Usage: $N {start|stop|restart|force-reload}" >&2
+    exit 1
+    ;;
 esac
 
 exit 0

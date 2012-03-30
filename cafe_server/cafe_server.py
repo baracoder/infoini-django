@@ -10,6 +10,7 @@ import json
 from serial.serialutil import SerialTimeoutException, SerialException
 import os
 from optparse import OptionParser
+import termios
 
 
 from django.conf import settings
@@ -27,6 +28,52 @@ class TCPRequestHandler(SocketServer.BaseRequestHandler):
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
+
+#######################################################################
+## Serial
+
+class Serial(object):
+    def __init__(self,port):
+        self._port = port
+        self._ser = None
+
+
+    def _startSer(self):
+        if not self._ser or not self._ser.isOpen():
+            try:
+                print "versuche Ser zu initialisieren..."
+                self._ser = serial.Serial(
+                        port=self._port,timeout=0.2,writeTimeout=0.2)
+                #self._ser.open()
+                return True
+            except SerialException:
+                print "Fehler beim initialisieren der Ser Schnittstelle"
+                self._clean()
+            return False
+
+    def _clean(self):
+        if self._ser:
+            self._ser.close()
+        self._ser = None
+
+
+    def get(self):
+        if not self._ser:
+            if not self._startSer():
+                return ""
+        try:
+            self._ser.flushInput()
+            self._ser.flushOutput()
+            self._ser.write("GET\n")
+            line = self._ser.readline()
+            print "GET returned:", line
+            return line
+        except SerialException:
+            self._clean()
+            return ""
+        except termios.error:
+            self._clean()
+            return ""
 
 
 #######################################################################
@@ -81,16 +128,16 @@ class PotSensor(Sensor):
             return {'status':"Keine Info"}
         else:
             d = pots[self._index]['level']
-            
+
         # mehr als Vollgewicht
         if d > self._max:
             return {'status':"Keine Info"}
-        
+
         # weniger als Leergewicht
         if d < self._min:
             return {'status':"Kanne fehlt"}
 
-        
+
         l=self._get_pot_level(d)
 
         # leer
@@ -106,11 +153,11 @@ class PotSensor(Sensor):
 class ArduinoParser(object):
     """
     Parser für Werte, die vom Arduino empfangen werden
-    
+
     die Methode parse(line) wird mit der empfangen Zeile aufgerufen,
     Die Werte können anschließend über die getX Methoden gelesen werden
     """
-    
+
     def __init__(self):
         self._re = re.compile(
                 r".*ACK pots:(?P<pots>(\[\d+,\d+\],?)+)"
@@ -118,7 +165,7 @@ class ArduinoParser(object):
         self._repot = re.compile (
                 r"\[(?P<level>\d+),(?P<sd>\d+)\]")
         self.parse("")
-    
+
     def _parsePots(self,pots):
         self._cofepots = []
         for match in self._repot.finditer(pots):
@@ -127,23 +174,23 @@ class ArduinoParser(object):
             #res = {k:int(v) for k, v in match.groupdict().iteritems()}
             res =  dict((k,int(v)) for k,v in match.groupdict().iteritems())
             self._cofepots.append(res)
-            
+
 
     def parse(self,line):
         """
         Parst *line* und Stellt Werte zur Verfügung
-        
+
         return: bei Erfolg True, sonst False
         """
         match = self._re.match(line)
-        print "parse" , line
-        if not match: 
+        print "parse '" , line, "'"
+        if not match:
             self._cofepots = []
             self._tueroffen = False
             self._status = False
             print "parsen fehlgeschlagen"
             return False
-        
+
         results = match.groupdict()
         self._parsePots(results['pots'])
         self._tueroffen = (results['tueroffen'] == "1")
@@ -181,25 +228,25 @@ class CafeServer(object):
 
     def __init__(self):
         """Erzeugt Sensoren und Quellen"""
-        
+
         # TODO min,max für kannen aus datenbank lesen
         # TODO: minmax auf arduino prüfen, ggf ändern
-        
+
         # ports aus settings lesen
         port_arduino = settings.PORT_ARDUINO
         port_tuer    = settings.PORT_TUER
-        
+
         self._port_arduino = port_arduino
-        
+
         self._parser = ArduinoParser()
         self._coffepots = [
-               PotSensor(parser=self._parser,index=0,minval=0,maxval=1200),
+               PotSensor(parser=self._parser,index=0,minval=400,maxval=700),
                PotSensor(parser=self._parser,index=1,minval=0,maxval=1200)]
         self._tuer = TuerSensor(port=port_tuer)
-        
+
         self._startTCP()
-        self._ser = None
-        
+        self._ser = Serial(port_arduino)
+
     def run(self):
         """ Startet Scheduler """
         self._schedluler = sched.scheduler(time.time, time.sleep)
@@ -207,44 +254,16 @@ class CafeServer(object):
         self._schedluler.enter(1,   1, self.update,())
         self._schedluler.run()
 
-
-    def _startSer(self):
-        if not self._ser or not self._ser.isOpen():
-            print "versuche Ser zu initialisieren..."
-            self._ser = serial.Serial(
-                    port=self._port_arduino,timeout=0.2,writeTimeout=0.2)
-            self._ser.open()
-
     def update(self):
         """Aktualisiert Werte und loggt ggf Fehler"""
         # sheduler aktualisieren
         self._schedluler.enter(1,   1, self.update,())
-        
-        try:
-            self._startSer()
-        except SerialException:
-            print "Fehler beim initialisieren der Ser Schnittstelle"
-            self._parser.parse("")
-            return
-        
+
         print "werte erfassen"
-        line = self.request_line()
+        line = self._ser.get()
         if not self._parser.parse(line):
             print "Fehler"
             # TODO fehler loggen
-
-    def request_line(self):
-        try:
-            self._ser.flushInput()
-            self._ser.flushOutput()
-            self._ser.write("{GET}")
-            line = self._ser.readline()
-            print "GET returned:", line
-            return line
-        except SerialException:
-            return ""
-        # TODO     termios.tcflush(self.fd, TERMIOS.TCIFLUSH)
-        # termios.error: (5, 'Input/output error')
 
 
     def record(self):
@@ -263,25 +282,24 @@ class CafeServer(object):
         return json.dumps(self.getData())
 
     def shutdown(self):
-        self._ser.close()
         self.server.shutdown()
         self.server_thread.join()
-        
+
 
 
 #######################################################################
 ## Start
 if __name__ == "__main__":
-    
+
     usage = "usage: %prog -s SETTINGS | --settings=SETTINGS"
     parser = OptionParser(usage)
     parser.add_option('-s', '--settings', dest='settings', metavar='SETTINGS',
                   help="The Django settings module to use")
     (options, args) = parser.parse_args()
-    
+
     if not options.settings:
         parser.error("You must specify a settings module")
-    
+
     os.environ['DJANGO_SETTINGS_MODULE'] = options.settings
 
 
