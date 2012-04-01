@@ -240,8 +240,8 @@ class CafeServer(object):
 
         self._parser = ArduinoParser()
         self._coffepots = [
-               PotSensor(parser=self._parser,index=0,minval=400,maxval=700),
-               PotSensor(parser=self._parser,index=1,minval=0,maxval=1200)]
+               PotSensor(parser=self._parser,index=0,minval=709,maxval=766),
+               PotSensor(parser=self._parser,index=1,minval=2000,maxval=3200)]
         self._tuer = TuerSensor(port=port_tuer)
 
         self._startTCP()
