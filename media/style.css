@@ -50,6 +50,39 @@ sup{font-size:0.7em;}
 .lernhilfen .filerow1 { background-color:#353535;}
 .lernhilfen .filerow2 { background-color:#454545;}
 
+.lernhilfen #filerows {position:relative;z-index:1;}
+
+.upload_form {
+    text-align:left;
+    background-color:#080;
+    display:none;
+    border-bottom: 1px solid #222222;
+    border-top: 1px solid #222222;
+    clear:both;
+}
+
+#btn_prevpage, #btn_nextpage {
+    z-index:1;
+    background-color:#444;
+    cursor:pointer;
+    padding:1em;
+}
+#btn_prevpage:hover, #btn_nextpage:hover {
+    background-color:#222;
+}
+
+#loader {
+    position:absolute;
+    top:0;left:0;
+    opacity:0.9;
+    z-index:2;
+    background-color:#333;
+    height:100%;width:100%;
+}
+#loader div { margin-top:2em; }
+
+
+
 /* messages   --------------------------------------------------------- */
 .messages li { border:1px solid #CC0;background-color:#FF8;padding:0.1em;list-style:none;}
 .messages li.success { border:1px solid #080;background-color:#1b1;}

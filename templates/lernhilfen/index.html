@@ -7,32 +7,6 @@
 {% block content %}
 <div class="login">{% include "login_box.html" %}</div>
 
-<style>
-.upload_form {
-    text-align:left;
-    background-color:#080;
-    display:none;
-    border-bottom: 1px solid #222222;
-    border-top: 1px solid #222222;
-    clear:both;
-}
-
-#btn_prevpage, #btn_nextpage {
-    z-index:1;
-}
-
-#loader {
-    position:absolute;
-    top:0;left:0;
-    opacity:0.9;
-    z-index:2;
-    background-color:#333;
-    height:100%;width:100%;
-}
-#loader div { margin-top:2em; }
-
-</style>
-
 <form action="./upload/" method="POST" enctype="multipart/form-data">
 <div class="lernhilfen block">
     <div align="left">
@@ -73,134 +47,23 @@
                 Lade...
                 </div>
             </div>
-            <div id="btn_prevpage">Hasprev</div>
-            <div id="filerows" style="position:relative;z-index:1;"></div>
-            <div id="btn_nextpage">Hasnext</div>
+            <div id="btn_prevpage" class="filerow"><a>Zurück</a></div>
+            <div id="filerows"></div>
+            <div id="btn_nextpage" class="filerow"><a href="#">Weiter</a></div>
         </div>
     </div>
 </div>
 </form>
 
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript">
+var offset=0;
 {% if user.is_staff %}
 var user_is_staff = true;
 {% else %}
 var user_is_staff = false;
 {% endif %}
-
-function file_rows(rows) {
-    var file_row_cycle=2;
-    var strr='';
-    for(var i in rows) {
-        strr+=file_row(rows[i],file_row_cycle++%2+1);
-    }
-    $('#filerows').html(strr);
-    //$('#filerows').fadeIn();
-    // TODO: Ajax-loader background ausblenden
-    $('#loader').hide();
-}
-
-function file_row(data,rownr) {
-    var row = '\
-    <div class="filerow filerow'+ rownr +'" id="filerow-'+data['id']+'">\
-        <div class="name" style="padding:2px;text-align:left;">\
-            <a href="'+ data['datei'] +'" target="_blank">'+ data['name'] +'</a>\
-            <sup>('+ data['endung'].substring(1) +')</sup>';
-    if(user_is_staff) {
-        row += '\
-            <div style="float:right;">';
-        if(data['gesichtet']=="False") row += '\
-                <a href="javascript:review('+data['id']+');">\
-                    <img src="/admin/media/img/admin/icon-yes.gif" alt="als gesichtet markieren"/>\
-                </a>';
-        row += '\
-                <a href="/admin/lernhilfen/lernhilfe/'+ data['id'] +'/">\
-                    <img src="/admin/media/img/admin/icon_changelink.gif" alt="Bearbeiten/Löschen" />\
-                </a>\
-            </div>';
-    }
-
-    row +='\
-            <div style="clear:both;"></div>\
-        </div>\
-        <div class="meta">\
-            <span>'+ data['studiengang'] +'</span>\
-            <span>'+ data['modul'] +'</span>\
-            <span>'+ data['dozent'] +'</span>\
-            <span>'+ data['semester'] +'</span>\
-            <span>'+ data['art'] +'</span>\
-            <div style="clear:both;"></div>\
-        </div>\
-    </div>\
-    ';
-    return row;
-}
-
-function get_filter_vals() {
-    filter =  {
-        'studiengang':$('#id_studiengang').val(),
-        'modul':$('#id_modul').val(),
-        'dozent':$('#id_dozent').val(),
-        'semester':$('#id_semester').val(),
-        'art':$('#id_art').val(),
-    };
-    if(user_is_staff && $('#show_unreviewed').attr('checked')) 
-        filter['ungesichtet']="";
-    return filter;
-}
-
-function parse_response(response) {
-    if(response['has_next']) $('#button_nextpage').show();
-    else $('#btn_nextpage').hide();
-
-    if(response['has_prev']) $('#button_prevpage').show();
-    else $('#btn_prevpage').hide();
-
-    file_rows(response['rows'])
-
-}
-
-
-function request_filerows(offset) {
-    if(!offset) offset=0;
-    $.get( '/lernhilfen/get/',get_filter_vals(),parse_response );
-    // 2. suchanfrage stellen und anntwort-funktion als callback setzen
-    // 3. ajax-loader bild anzeigen
-    $('#loader').fadeIn();
-    //$('#filerows').hide();
-}
-
-function review(id) {
-    $('#filerow-'+id).css({'background-color':'#080'});
-    $.get( '/lernhilfen/sichten/'+id,review_callback);
-}
-
-function review_callback() {
-    request_filerows();
-}
-
-// Optional:
-// Hash-url auswerten
-
-// Ablauf beim laden der seite:
-// 1. Optional: hash auswerten
-// 2. suchanfrage stellen und anntwort-funktion als callback setzen
-// 3. ajax-loader bild anzeigen
-
-request_filerows();
-
-$('.filter select').change(request_filerows);
-$('#show_unreviewed').change(request_filerows);
-
-$('#btn_hochladen').click(
-function() {
-    $('#ulform1').fadeToggle(500)
-    $('#ulform2').delay(300).fadeToggle(500)
-    return false;
-}
-);
-
 </script>
+<script src="/media/lernhilfen.js" type="text/javascript"></script>
+
 {% endblock %}
