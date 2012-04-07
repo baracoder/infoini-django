@@ -361,6 +361,7 @@
 	margin: 0;
 	display:block;
 	float: left;
+        max-height:20em;
 }
 .ui-menu .ui-menu {
 	margin-top: -3px;
