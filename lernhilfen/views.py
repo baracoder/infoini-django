@@ -9,30 +9,61 @@ from django.contrib import messages
 from django.core.files import File
 from django.conf import settings
 
+import json
 
 import os, random
 
 @csrf_protect
 @login_required
 def index(request):
+    filterset = forms.LernhilfenFilterSet()
+    c = {
+        'filter':filterset,
+        'q':request.GET.urlencode()
+    }
+    return render_response(request,'lernhilfen/index.html',c)
+
+def ajax_get(request):
+    # anzahl lernhilfen pro seite
+    onpage = 10
+
     if request.GET and request.GET.has_key('semester'):
         filterset = forms.LernhilfenFilterSet(request.GET)
     else:
         filterset = forms.LernhilfenFilterSet()
 
-    l = filterset.qs
-    if request.GET.has_key('ungesichtet'):
-        l = l.filter(gesichtet=False)
-    if not request.user.is_staff:
-        l = l.filter(gesichtet=True)
+    offset = 0
+    if request.GET and request.GET.has_key('offset'):
+        offset = int(request.GET['offset'])
+    list_strt = offset * onpage
+    list_end  = (offset+1) * onpage
 
-    c = {
-        'filter':filterset,
-        'l':l,
-        'q':request.GET.urlencode()
-    }
-    c.update(csrf(request))
-    return render_response(request,'lernhilfen/index.html', c)
+    qs = filterset.qs
+    if request.GET.has_key('ungesichtet'):
+        qs = qs.filter(gesichtet=False)
+    if not request.user.is_staff:
+        qs = qs.filter(gesichtet=True)
+
+    qs_page = qs[list_strt:list_end]
+
+    has_prev = offset>0
+    has_next = len(qs)>list_end
+
+    fields = [ 'id', 'name', 'endung', 'art', 'modul', 'dozent',
+                'studiengang', 'semester', 'gesichtet']
+    rows = []
+    for r in qs_page:
+        row = {}
+        for f in fields:
+            row[f]=unicode(r.__getattribute__(f))
+            # datei braucht sonder bhandlung
+            row['datei'] = unicode(r.datei.url)
+        rows.append(row)
+    resp = {'has_prev':has_prev,
+            'has_next':has_next,
+            'rows':rows,
+            }
+    return HttpResponse(json.dumps(resp), mimetype="application/json")
 
 @csrf_protect
 @login_required
