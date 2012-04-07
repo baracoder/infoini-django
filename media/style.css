@@ -39,9 +39,11 @@ sup{font-size:0.7em;}
 /* lernhilfen --------------------------------------------------------- */
 .lernhilfen { font-size:0.8em;padding-left:0;padding-right:0;}
 .lernhilfen ul.filter { margin:0;}
-.lernhilfen .filter li {width:20%;display:block;float:left;margin:0;}
+.lernhilfen .filter li {width:20%;display:block;float:left;margin:0;font-size:0.8em;}
 .lernhilfen .filter label {display:block;margin:1px;}
-.lernhilfen .filter select {width:99%;margin:1px;}
+/*.lernhilfen .filter select {width:99%;margin:1px;}*/
+.lernhilfen .filter .ui-button-text {padding:0;}
+.lernhilfen .filter .ui-autocomplete-input { width:70%;}
 .lernhilfen div.meta { font-size:0.6em;border-top:1px dotted #666;}
 .lernhilfen .meta span { text-align:left; display:block;float:left; width:20%;}
 .lernhilfen .filelist { border-top:1px solid #222;border-bottom:0;clear:both; }
@@ -91,6 +93,8 @@ input,select,textarea { background-color:#333; color:#fff; border:1px solid blac
 option { background-color:#333;}
 input[type="submit"] { background-color:#028999;}
 
+ul.errorlist { position:relative;top:-1em;width:10em; }
+.errorlist li {width:100% !important; background-color:red;}
 
 /* cafe-status -------------------------------------------------------- */
 .progress_bar {
