@@ -107,7 +107,7 @@ function review_callback() {
 request_filerows();
 
 $('.filter select').select(callback_filter_change);
-$('#show_unreviewed').select(callback_filter_change);
+$('#show_unreviewed').change(callback_filter_change);
 
 $('#btn_hochladen').click( function() {
     $('#ulform1').fadeToggle(500)
