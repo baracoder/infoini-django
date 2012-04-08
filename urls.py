@@ -7,7 +7,10 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', direct_to_template, {'template': 'index.html'}),
+    #(r'^$', direct_to_template, {'template': 'index.html'}),
+    (r'^$', 'django.views.generic.simple.redirect_to',
+             {'url': '/redmine/'}),
+
     (r'^lernhilfen/', include('lernhilfen.urls')),
     (r'^', include('cafe_server.urls')),
 
