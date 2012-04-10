@@ -3,31 +3,40 @@
 {% block heading %}<a href="/lernhilfen/">Lernhilfen</a> / einsortieren{% endblock %}
 
 {% block content %}
-<div class="block">
-    <p>Danke für deine Hilfe!</p>
-    <p>Du bekommst eine zufällige Datei aus dem alten Archiv präsentiert.
-    Bilder und PDFs werden direkt angezeigt, wenn dein Browser das unterstützt.
-    Archive müssen heruntergeladen werden. Wenn du damit nichts anfangen
-    kannst, wähle eine 
-                <a href="./">andere Datei</a></p>
-</div>
+<form action="./" method="POST">
+{% csrf_token %}
+<input type="hidden" name="datei" value="{{ src }}" />
 
 <div class="lernhilfen block">
-
-    <form action="./" method="POST">
-        <iframe src="/media/{{ src }}#" style="width:100%;height:30em;"  name="vorschau"></iframe>
-        {% csrf_token %}
-        <input type="hidden" name="datei" value="{{ src }}" />
+    <p>Danke für deine Hilfe!</p>
+    <div class="upload_form" style="font-weight:bold;display:block;">
+        <ol>
+            <li>Lernhilfe anschauen  oder herunterladen <sup>PDFs und Bilder werden im Browser angezeigt.</sup>
+            <sup>Du bekommst eine zufällige noch nicht einsortierte Datei angezeigt.</sup></li>
+        </ol>
+    </div>
+    <h1><a href="/media/{{src}}">Download</a></h1>
+    {% if src|lower|slice:'-3:' in 'pdf' or  src|lower|slice:'-3:' in 'jpg' or src|lower|slice:'-3:' in 'png' or src|lower|slice:'-4:' in 'jpeg' %}
+    <iframe src="/media/{{ src }}#" style="width:100%;height:30em;"  name="vorschau"></iframe>
+    {% endif %}
+    <a href="./">Andere Datei laden</a>
+    <div class="upload_form" style="font-weight:bold;display:block;">
+        <ol start="2">
+            <li>Einsortieren <sup>Die Angaben stehen meistens auf der Lernhilfe drauf.</sup></li>
+        </ol>
         <div class="meta-head">
             <ul class="filter">
                 {{ sort_form.as_ul}}
             </ul>
             <div align="right" style="clear:both;">
-            <input type="submit" value="speichern"/>
             </div>
         </div>
-    </form>
+        <ol start="3">
+            <li><input type="submit" value="speichern"/></li>
+        </ol>
+    </div>
 </div>
+</form>
 
 <script type="text/javascript">
 

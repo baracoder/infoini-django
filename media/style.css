@@ -63,6 +63,8 @@ sup{font-size:0.7em;}
     clear:both;
 }
 
+.upload_form sup {font-weight:normal;}
+
 #btn_prevpage, #btn_nextpage {
     z-index:1;
     background-color:#444;
