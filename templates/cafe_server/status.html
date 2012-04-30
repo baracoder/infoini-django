@@ -15,15 +15,19 @@
         <h2>0xCAFE</h2>
         {% for pot in cafepots %}
         <div class="pot">
+	    Kanne {% cycle '1' '2' %}
             <div class="progress_bar">
                 {% if pot.level %}
                 <strong>{{ pot.level|floatformat:"0" }}%</strong>
-                <span style="width: {{ pot.level|floatformat:"0" }}%;">&nbsp;</span>
+                <span style="width: {{ pot.level|floatformat:"0" }}%;background-position:center middle;background-repeat:x-repeat;background-image:url('/media/cafe_cup.png');">&nbsp;</span>
                 {% else %}
                 <strong>{{ pot.status }}</strong>
                 {% endif %}
             </div>
         </div>
         {% endfor %}
+	<div align="center">
+		<a href="/munin/infoini/general/cafe_pots.html">Verlauf</a>
+	</div>
     </div>
 {% endblock %}
